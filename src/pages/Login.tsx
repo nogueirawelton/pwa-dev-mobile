@@ -1,3 +1,5 @@
+import { AuthForm } from "../components/Home/AuthForm";
+
 export function Login() {
-  return <div>Login</div>;
+  return <AuthForm />;
 }

@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { Logo } from "../pages/Logo";
-import homeIllustration from "../../public/img/home-illustration.svg";
+import homeIllustration from "/img/home-illustration.svg";
 import { motion } from "framer-motion";
 import { User } from "phosphor-react";
 
@@ -11,7 +11,7 @@ export function HomeLayout() {
 
   return (
     <>
-      <header className="border-b border-zinc-700 px-4 lg:px-8">
+      <header className="fixed top-0 z-50 w-full border-b border-zinc-700 bg-zinc-900 px-4 lg:px-8">
         <div className="mx-auto flex h-20 max-w-screen-xl items-center justify-between">
           <Link to="/" title="Kpz Finances">
             <Logo className="h-10 w-10" color="#f5f5f5" />
@@ -27,8 +27,8 @@ export function HomeLayout() {
           </Link>
         </div>
       </header>
-      <main className="px-4 lg:px-8">
-        <div className="min-h-home-content mx-auto mt-10 grid max-w-screen-xl items-center gap-4 md:grid-cols-2 lg:mt-0">
+      <main className="px-4 pt-20 lg:px-8">
+        <div className="mx-auto mt-10 grid min-h-home-content max-w-screen-xl items-center gap-4 md:grid-cols-2 lg:mt-0">
           <div
             data-home={isHome}
             className="order-1 pb-4 text-zinc-100 data-[home=false]:hidden md:order-none md:pb-0 data-[home=false]:md:block"
@@ -41,8 +41,8 @@ export function HomeLayout() {
               Simples e Eficiente
             </h1>
             <p className="mt-6 font-medium">
-              Organize suas Finanças de Forma Descomplicada
-              <br />e Obtenha Controle Total
+              Organize suas finanças de forma descomplicada
+              <br className="hidden md:block" />e obtenha um controle total.
             </p>
             <Link
               to="/signup"
@@ -67,6 +67,8 @@ export function HomeLayout() {
                 }}
               >
                 <img
+                  width={520}
+                  height={520}
                   className="mx-auto max-h-[520px] md:ml-auto md:mr-0"
                   src={homeIllustration}
                   alt=""
