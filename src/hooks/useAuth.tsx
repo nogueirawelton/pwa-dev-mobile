@@ -1,13 +1,13 @@
-import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
-import { CircleNotch } from 'phosphor-react';
+import { User, getAuth, onAuthStateChanged } from "firebase/auth";
+import { CircleNotch } from "phosphor-react";
 import {
   ReactNode,
   createContext,
   useContext,
   useEffect,
   useState,
-} from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+} from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface AuthContextProps {
   children: ReactNode;
@@ -30,15 +30,15 @@ export function AuthContextProvider({ children }: AuthContextProps) {
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        if (location.pathname.includes('/admin')) {
-          navigate('/');
+        if (location.pathname.includes("/admin")) {
+          navigate("/");
         }
         return;
       }
 
       setUser(user);
-      if (location.pathname == '/') {
-        navigate('/admin/dashboard');
+      if (location.pathname == "/") {
+        navigate("/admin");
       }
     });
 
@@ -49,8 +49,8 @@ export function AuthContextProvider({ children }: AuthContextProps) {
 
   if (isLoading) {
     return (
-      <div className="w-screen h-screen grid place-items-center">
-        <CircleNotch className="h-10 w-10 animate-spin text-blue-600" />
+      <div className="grid h-screen w-screen place-items-center">
+        <CircleNotch className="h-10 w-10 animate-spin text-sky-500" />
       </div>
     );
   }
@@ -59,7 +59,8 @@ export function AuthContextProvider({ children }: AuthContextProps) {
     <AuthContext.Provider
       value={{
         user,
-      }}>
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

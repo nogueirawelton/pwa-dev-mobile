@@ -1,32 +1,21 @@
-import { Routes, Route } from 'react-router-dom';
-import { Login } from './pages/Login';
-import { DefaultTemplate } from './templates/DefaultTemplate';
-import { Dashboard } from './pages/Dashboard';
-import { NotFound } from './pages/NotFound';
+import { Routes, Route } from "react-router-dom";
+import { NotFound } from "./pages/NotFound";
+import { AdminLayout } from "./layouts/AdminLayout";
+import { HomeLayout } from "./layouts/HomeLayout";
+import { Signup } from "./pages/Signup";
+import { Login } from "./pages/Login";
 
 export function Router() {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={<Login />}
-      />
-      <Route
-        path="/admin"
-        element={<DefaultTemplate />}>
-        <Route
-          path="/admin/dashboard"
-          element={<Dashboard />}
-        />
-        <Route
-          path="/admin/notifications"
-          element={<p>Notifications</p>}
-        />
+      <Route path="/" element={<HomeLayout />}>
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
       </Route>
-      <Route
-        path="*"
-        element={<NotFound />}
-      />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin/notifications" element={<p>Notifications</p>} />
+      </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
