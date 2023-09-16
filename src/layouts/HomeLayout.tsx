@@ -68,7 +68,7 @@ export function HomeLayout() {
                 <img
                   width={520}
                   height={520}
-                  className="mx-auto max-h-[120px] md:ml-auto md:mr-0 md:max-h-[550px]"
+                  className="mx-auto max-h-[220px] md:ml-auto md:mr-0 md:max-h-[550px]"
                   src={homeIllustration}
                   alt=""
                 />
