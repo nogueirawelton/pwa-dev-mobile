@@ -1,20 +1,27 @@
 import { GithubAuthProvider, GoogleAuthProvider } from "firebase/auth";
 import { OAuthButton } from "./OAuthButton";
-import { GithubLogo, GoogleLogo } from "phosphor-react";
+import { Eye, EyeClosed, GithubLogo, GoogleLogo } from "phosphor-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 export function AuthForm() {
   const { pathname } = useLocation();
+  const isLoginPage = pathname == "/login";
+  const [showPassword, setShowPassword] = useState(false);
 
   const formSchema = z.object({
     email: z.string().email("E-mail inválido"),
-    password:
-      pathname == "/login"
-        ? z.string()
-        : z.string().min(8, "A senha deve ter no mínimo 8 caracteres"),
+    password: z
+      .string()
+      .min(
+        8,
+        isLoginPage
+          ? "Senha inválida"
+          : "A senha deve ter no mínimo 8 caracteres",
+      ),
   });
 
   const {
@@ -36,7 +43,7 @@ export function AuthForm() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="w-full max-w-[300px] space-y-2">
+      <div className="w-full max-w-[320px] space-y-2">
         <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <div data-filled={!!email?.length} className="group relative">
@@ -49,6 +56,7 @@ export function AuthForm() {
               <input
                 {...register("email")}
                 id="email"
+                autoComplete="email"
                 className="h-14 w-full rounded-md border border-zinc-700 bg-transparent px-4 text-zinc-100 group-data-[filled=true]:border-zinc-100"
                 type="email"
               />
@@ -65,24 +73,60 @@ export function AuthForm() {
               >
                 Senha
               </label>
-              <input
-                {...register("password")}
-                id="password"
-                className="h-14 w-full rounded-md border border-zinc-700 bg-transparent px-4 text-zinc-100 group-data-[filled=true]:border-zinc-100"
-                type="password"
-              />
+              <div className="flex gap-1 rounded-md border border-zinc-700 focus-within:outline focus-within:outline-1 focus-within:outline-white group-data-[filled=true]:border-zinc-100">
+                <input
+                  {...register("password")}
+                  id="password"
+                  autoComplete="senha"
+                  className="h-14 w-full bg-transparent px-4 text-zinc-100 outline-none"
+                  type={showPassword ? "text" : "password"}
+                />
+                <button
+                  type="button"
+                  aria-label={showPassword ? "Esconder Senha" : "Mostrar Senha"}
+                  aria-pressed={showPassword}
+                  className="grid w-14 shrink-0 place-items-center"
+                  onClick={() => setShowPassword((prevState) => !prevState)}
+                >
+                  {showPassword ? (
+                    <EyeClosed className="h-6 w-6 text-zinc-700" />
+                  ) : (
+                    <Eye className="h-6 w-6 text-zinc-700" />
+                  )}
+                </button>
+              </div>
             </div>
             {errors.password && (
               <small className="text-red-500">{errors.password.message}</small>
             )}
           </div>
           <button
-            className="mt-4 h-14 rounded-md bg-sky-500 font-medium text-zinc-100"
+            className="mt-2 h-14 rounded-md bg-sky-500 font-medium text-zinc-100 transition-all duration-300 hover:brightness-90"
             type="submit"
           >
             Continuar
           </button>
         </form>
+        {isLoginPage ? (
+          <span className="block py-2 text-center text-sm text-zinc-100">
+            Não tem uma conta?{" "}
+            <Link className="font-medium text-sky-500" to="/signup">
+              Cadastre-se
+            </Link>
+          </span>
+        ) : (
+          <span className="block py-2 text-center text-sm text-zinc-100">
+            Já possui uma conta?{" "}
+            <Link className="font-medium text-sky-500" to="/login">
+              Fazer Login
+            </Link>
+          </span>
+        )}
+        <div className="flex items-center gap-2 py-2">
+          <span className="h-[.5px] w-full bg-zinc-500"></span>
+          <span className="text-sm uppercase text-zinc-500">Ou</span>
+          <span className="h-[.5px] w-full bg-zinc-500"></span>
+        </div>
         <OAuthButton
           className="flex h-14 w-full items-center justify-center gap-4 rounded-md border border-zinc-700 px-5 text-zinc-100 transition-colors duration-300 hover:bg-zinc-700"
           provider={new GoogleAuthProvider()}

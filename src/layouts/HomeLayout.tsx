@@ -4,7 +4,6 @@ import homeIllustration from "/img/home-illustration.svg";
 import { motion } from "framer-motion";
 import { User } from "phosphor-react";
 
-console.log(motion);
 export function HomeLayout() {
   const { pathname } = useLocation();
   const isHome = pathname == "/";
@@ -28,7 +27,7 @@ export function HomeLayout() {
         </div>
       </header>
       <main className="px-4 pt-20 lg:px-8">
-        <div className="mx-auto mt-10 grid min-h-home-content max-w-screen-xl items-center gap-4 md:grid-cols-2 lg:mt-0">
+        <div className="mx-auto mt-10 grid max-w-screen-xl gap-4 md:min-h-home-content md:grid-cols-2 md:items-center lg:mt-0">
           <div
             data-home={isHome}
             className="order-1 pb-4 text-zinc-100 data-[home=false]:hidden md:order-none md:pb-0 data-[home=false]:md:block"
