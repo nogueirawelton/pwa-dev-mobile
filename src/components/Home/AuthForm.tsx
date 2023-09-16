@@ -43,6 +43,19 @@ export function AuthForm() {
 
   return (
     <div className="flex flex-col items-center">
+      {isLoginPage ? (
+        <div className="mb-10 w-full max-w-[320px]">
+          <h2 className="text-center text-3xl font-bold text-zinc-100">
+            Acesse sua Conta
+          </h2>
+        </div>
+      ) : (
+        <div className="mb-10 w-full max-w-[320px]">
+          <h2 className="text-center text-3xl font-bold text-zinc-100">
+            Crie sua Conta
+          </h2>
+        </div>
+      )}
       <div className="w-full max-w-[320px] space-y-2">
         <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div>
@@ -57,7 +70,7 @@ export function AuthForm() {
                 {...register("email")}
                 id="email"
                 autoComplete="email"
-                className="h-14 w-full rounded-md border border-zinc-700 bg-transparent px-4 text-zinc-100 group-data-[filled=true]:border-zinc-100"
+                className="h-12 w-full rounded-md border border-zinc-700 bg-transparent px-4 text-sm text-zinc-100 group-data-[filled=true]:border-zinc-100"
                 type="email"
               />
             </div>
@@ -78,14 +91,14 @@ export function AuthForm() {
                   {...register("password")}
                   id="password"
                   autoComplete="senha"
-                  className="h-14 w-full bg-transparent px-4 text-zinc-100 outline-none"
+                  className="h-12 w-full bg-transparent px-4 text-sm text-zinc-100 outline-none"
                   type={showPassword ? "text" : "password"}
                 />
                 <button
                   type="button"
                   aria-label={showPassword ? "Esconder Senha" : "Mostrar Senha"}
                   aria-pressed={showPassword}
-                  className="grid w-14 shrink-0 place-items-center"
+                  className="grid w-12 shrink-0 place-items-center"
                   onClick={() => setShowPassword((prevState) => !prevState)}
                 >
                   {showPassword ? (
@@ -101,7 +114,7 @@ export function AuthForm() {
             )}
           </div>
           <button
-            className="mt-2 h-14 rounded-md bg-sky-500 font-medium text-zinc-100 transition-all duration-300 hover:brightness-90"
+            className="mt-2 h-12 rounded-md bg-sky-500 font-medium text-zinc-100 transition-all duration-300 hover:brightness-90"
             type="submit"
           >
             Continuar
@@ -128,14 +141,14 @@ export function AuthForm() {
           <span className="h-[.5px] w-full bg-zinc-500"></span>
         </div>
         <OAuthButton
-          className="flex h-14 w-full items-center justify-center gap-4 rounded-md border border-zinc-700 px-5 text-zinc-100 transition-colors duration-300 hover:bg-zinc-700"
+          className="flex h-12 w-full items-center justify-center gap-4 rounded-md border border-zinc-700 px-5 text-zinc-100 transition-colors duration-300 hover:bg-zinc-700"
           provider={new GoogleAuthProvider()}
         >
           <GoogleLogo className="h-5 w-5" weight="bold" />
           Continuar com o Google
         </OAuthButton>
         <OAuthButton
-          className="flex h-14 w-full items-center justify-center gap-4 rounded-md border border-zinc-700 px-5 text-zinc-100 transition-colors duration-300 hover:bg-zinc-700"
+          className="flex h-12 w-full items-center justify-center gap-4 rounded-md border border-zinc-700 px-5 text-zinc-100 transition-colors duration-300 hover:bg-zinc-700"
           provider={new GithubAuthProvider()}
         >
           <GithubLogo className="h-5 w-5" weight="bold" />
