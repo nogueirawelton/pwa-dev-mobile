@@ -1,5 +1,5 @@
-import { AuthForm } from "../components/Home/AuthForm";
+import { Auth } from "../components/Home/Auth";
 
 export function Login() {
-  return <AuthForm />;
+  return <Auth />;
 }

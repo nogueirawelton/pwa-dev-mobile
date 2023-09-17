@@ -2,7 +2,7 @@ import { AuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { ComponentProps } from "react";
-import throwLoginError from "../../utils/throwLoginError";
+import throwLoginError from "../../../utils/throwLoginError";
 
 interface OAuthButtonProps extends ComponentProps<"button"> {
   children: ReactNode;
