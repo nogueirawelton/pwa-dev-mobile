@@ -5,14 +5,13 @@ import { useCallback, useState } from "react";
 import { CircleNotch, Eye, EyeClosed } from "phosphor-react";
 import {
   createUserWithEmailAndPassword,
-  getAuth,
   sendEmailVerification,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useLocation, useNavigate } from "react-router-dom";
 import throwLoginError from "../../../utils/throwLoginError";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import db from "../../../services/firebase";
+import { auth, db } from "../../../services/firebase";
 import throwSuccessMessage from "../../../utils/throwSuccessMessage";
 
 interface FormProps {
@@ -22,7 +21,6 @@ interface FormProps {
 export function Form({ isLogin }: FormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const auth = getAuth();
   const navigate = useNavigate();
   const { search } = useLocation();
   const registeredEmail = new URLSearchParams(search).get("email") || "";

@@ -1,4 +1,4 @@
-import { User, getAuth, onAuthStateChanged } from "firebase/auth";
+import { User, onAuthStateChanged } from "firebase/auth";
 import { CircleNotch } from "phosphor-react";
 import {
   ReactNode,
@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { auth } from "../services/firebase";
 
 interface AuthContextProps {
   children: ReactNode;
@@ -23,19 +24,16 @@ export function AuthContextProvider({ children }: AuthContextProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const auth = getAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   function authUser(user: User | null) {
     setUser(user);
-
     navigate("/admin");
   }
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
-      console.log("Changed", user);
       if (!user || !user.emailVerified) {
         if (location.pathname.includes("/admin")) {
           navigate("/login");

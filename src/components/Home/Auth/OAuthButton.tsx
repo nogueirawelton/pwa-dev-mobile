@@ -1,14 +1,13 @@
 import {
   AuthProvider,
   getAdditionalUserInfo,
-  getAuth,
   signInWithPopup,
 } from "firebase/auth";
 import { ReactNode } from "react";
 import { ComponentProps } from "react";
 import throwLoginError from "../../../utils/throwLoginError";
 import { doc, setDoc } from "firebase/firestore";
-import db from "../../../services/firebase";
+import { auth, db } from "../../../services/firebase";
 
 interface OAuthButtonProps extends ComponentProps<"button"> {
   children: ReactNode;
@@ -20,8 +19,6 @@ export function OAuthButton({
   provider,
   ...props
 }: OAuthButtonProps) {
-  const auth = getAuth();
-
   function handleLogin() {
     auth.useDeviceLanguage();
 
