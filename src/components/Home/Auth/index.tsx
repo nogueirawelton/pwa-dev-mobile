@@ -1,7 +1,6 @@
 import { GithubAuthProvider, GoogleAuthProvider } from "firebase/auth";
 import { GithubLogo, GoogleLogo } from "phosphor-react";
 
-import { useLocation } from "react-router-dom";
 import { Title } from "./Title";
 import { Form } from "./Form";
 import { AuxText } from "./AuxText";
@@ -9,8 +8,7 @@ import { OptionDivider } from "./OptionDivider";
 import { OAuthButton } from "./OAuthButton";
 
 export function Auth() {
-  const { pathname } = useLocation();
-  const isLogin = pathname == "/login";
+  const isLogin = location.href == "/login";
 
   return (
     <div className="flex flex-col items-center">
