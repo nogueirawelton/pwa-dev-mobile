@@ -8,7 +8,7 @@ import { OptionDivider } from "./OptionDivider";
 import { OAuthButton } from "./OAuthButton";
 
 export function Auth() {
-  const isLogin = location.href == "/login";
+  const isLogin = location.href.includes("login");
 
   return (
     <div className="flex flex-col items-center">
