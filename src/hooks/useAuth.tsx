@@ -25,7 +25,6 @@ export function AuthContextProvider({ children }: AuthContextProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   function authUser(user: User | null) {
     setUser(user);
@@ -36,12 +35,8 @@ export function AuthContextProvider({ children }: AuthContextProps) {
     onAuthStateChanged(auth, async (user) => {
       console.log(user);
       if (!user || !user.emailVerified) {
-        console.log("First if");
-        alert(location.pathname.includes("admin"));
-        alert(location.pathname);
-        if (location.pathname.includes("admin")) {
+        if (location.href.includes("admin")) {
           navigate("/login");
-          console.log("Redirecting to Login");
           return;
         }
       }
