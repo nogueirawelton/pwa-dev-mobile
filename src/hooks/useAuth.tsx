@@ -33,7 +33,6 @@ export function AuthContextProvider({ children }: AuthContextProps) {
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
-      console.log(user);
       if (!user || !user.emailVerified) {
         if (location.href.includes("admin")) {
           navigate("/login");
@@ -43,7 +42,6 @@ export function AuthContextProvider({ children }: AuthContextProps) {
 
       if (user && user.emailVerified) {
         authUser(user);
-        console.log("Redirecting to Admin");
       }
     });
 
