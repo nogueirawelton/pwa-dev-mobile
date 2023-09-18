@@ -29,12 +29,14 @@ export function AuthContextProvider({ children }: AuthContextProps) {
   function authUser(user: User | null) {
     setUser(user);
     navigate("/admin");
+    console.log("Sign In");
   }
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (!user || !user.emailVerified) {
         if (location.href.includes("admin")) {
+          console.log("Sign Out");
           navigate("/login");
           return;
         }
