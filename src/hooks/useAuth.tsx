@@ -28,8 +28,8 @@ export function AuthContextProvider({ children }: AuthContextProps) {
 
   function authUser(user: User | null) {
     setUser(user);
-    navigate("/admin");
     console.log("Sign In", location.href);
+    navigate("/admin");
   }
 
   useEffect(() => {
