@@ -1,5 +1,4 @@
 import { Outlet, useLocation } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
 import { getAuth, signOut } from "firebase/auth";
 import { Dashboard } from "../pages/Dashboard";
 import { SignOut } from "phosphor-react";
