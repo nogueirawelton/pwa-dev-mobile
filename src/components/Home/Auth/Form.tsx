@@ -98,7 +98,6 @@ export function Form({ isLogin }: FormProps) {
           throwLoginError("auth/waiting-email-verification");
           return;
         }
-        console.log(dbUser.exists(), dbUser.data());
 
         if (!dbUser.exists()) {
           setDoc(doc(db, "users", user.uid), {
