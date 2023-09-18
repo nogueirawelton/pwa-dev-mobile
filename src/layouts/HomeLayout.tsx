@@ -41,7 +41,7 @@ export function HomeLayout() {
             </h1>
             <p className="mt-6 font-medium">
               Organize suas finanças de forma descomplicada
-              <br className="hidden md:block" />e obtenha um controle total.
+              <br className="hidden md:block" /> e obtenha um controle total.
             </p>
             <Link
               to="/signup"
