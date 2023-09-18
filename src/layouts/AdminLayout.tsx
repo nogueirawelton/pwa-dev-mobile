@@ -2,11 +2,10 @@ import { Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { getAuth, signOut } from "firebase/auth";
 import { Dashboard } from "../pages/Dashboard";
-import { CaretDown, SignOut } from "phosphor-react";
+import { SignOut } from "phosphor-react";
 import { Logo } from "../components/Logo";
 
 export function AdminLayout() {
-  const { user } = useAuth();
   const { pathname } = useLocation();
 
   const auth = getAuth();
