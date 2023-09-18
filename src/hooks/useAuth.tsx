@@ -37,7 +37,7 @@ export function AuthContextProvider({ children }: AuthContextProps) {
       console.log(user);
       if (!user || !user.emailVerified) {
         console.log("First if");
-        if (location.pathname.includes("/admin")) {
+        if (location.pathname.includes("admin")) {
           navigate("/login");
           console.log("Redirecting to Login");
           return;
