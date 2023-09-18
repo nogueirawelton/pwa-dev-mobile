@@ -34,7 +34,9 @@ export function AuthContextProvider({ children }: AuthContextProps) {
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
+      console.log(user);
       if (!user || !user.emailVerified) {
+        console.log("First if");
         if (location.pathname.includes("/admin")) {
           navigate("/login");
           console.log("Redirecting to Login");
@@ -44,7 +46,7 @@ export function AuthContextProvider({ children }: AuthContextProps) {
 
       if (user && user.emailVerified) {
         authUser(user);
-        console.log("Redirecting to Admin")
+        console.log("Redirecting to Admin");
       }
     });
 
