@@ -37,6 +37,7 @@ export function AuthContextProvider({ children }: AuthContextProps) {
       if (!user || !user.emailVerified) {
         if (location.href.includes("admin")) {
           console.log("Sign Out", location.href);
+          console.log(user, user?.emailVerified);
           navigate("/login");
           return;
         }
