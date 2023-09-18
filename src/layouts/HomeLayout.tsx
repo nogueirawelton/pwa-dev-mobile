@@ -1,8 +1,8 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { Logo } from "../pages/Logo";
 import homeIllustration from "/img/home-illustration.svg";
 import { motion } from "framer-motion";
 import { User } from "phosphor-react";
+import { Logo } from "../components/Logo";
 
 export function HomeLayout() {
   const { pathname } = useLocation();

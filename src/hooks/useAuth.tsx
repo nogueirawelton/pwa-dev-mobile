@@ -27,18 +27,23 @@ export function AuthContextProvider({ children }: AuthContextProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
+  function authUser(user: User | null) {
+    setUser(user);
+
+    navigate("/admin");
+  }
+
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
-      if (!user) {
+      if (!user || !user.emailVerified) {
         if (location.pathname.includes("/admin")) {
-          navigate("/");
+          navigate("/login");
+          return;
         }
-        return;
       }
 
-      setUser(user);
-      if (location.pathname == "/") {
-        navigate("/admin");
+      if (user && user.emailVerified) {
+        authUser(user);
       }
     });
 

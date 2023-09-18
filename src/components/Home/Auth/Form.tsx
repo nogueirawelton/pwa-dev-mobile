@@ -6,10 +6,14 @@ import { CircleNotch, Eye, EyeClosed } from "phosphor-react";
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  sendEmailVerification,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import throwLoginError from "../../../utils/throwLoginError";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import db from "../../../services/firebase";
+import throwSuccessMessage from "../../../utils/throwSuccessMessage";
 
 interface FormProps {
   isLogin: boolean;
@@ -20,6 +24,8 @@ export function Form({ isLogin }: FormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const auth = getAuth();
   const navigate = useNavigate();
+  const { search } = useLocation();
+  const registeredEmail = new URLSearchParams(search).get("email") || "";
 
   // ---------- HOOK FORM CONFIG ---------- //
 
@@ -29,7 +35,9 @@ export function Form({ isLogin }: FormProps) {
       .string()
       .min(
         8,
-        isLogin ? "Senha inválida" : "A senha deve ter no mínimo 8 caracteres",
+        isLogin
+          ? "Senha inválida (mín. 8 caracteres)"
+          : "A senha deve ter no mínimo 8 caracteres",
       ),
   });
 
@@ -39,6 +47,10 @@ export function Form({ isLogin }: FormProps) {
     watch,
     formState: { errors },
   } = useForm<FormData>({
+    defaultValues: {
+      email: registeredEmail,
+      password: "",
+    },
     resolver: zodResolver(formSchema),
   });
 
@@ -64,22 +76,41 @@ export function Form({ isLogin }: FormProps) {
 
   const createAccount = useCallback((email: string, password: string) => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigate("/admin");
+      .then(async ({ user }) => {
+        return sendEmailVerification(user).then(() => {
+          navigate(`/login?email=${user.email}`);
+          throwSuccessMessage("Email de confirmação enviado!");
+        });
       })
       .catch((error) => {
         throwLoginError(error.code);
       })
-      .finally(() => setIsLoading(false ));
+      .finally(() => setIsLoading(false));
   }, []);
 
   const loginWithAccount = useCallback((email: string, password: string) => {
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigate("/admin");
+      .then(async (loginData) => {
+        const { user } = loginData;
+        const dbUser = await getDoc(doc(db, "users", user.uid));
+
+        if (!user.emailVerified) {
+          throwLoginError("auth/waiting-email-verification");
+          return;
+        }
+        console.log(dbUser.exists(), dbUser.data());
+
+        if (!dbUser.exists()) {
+          setDoc(doc(db, "users", user.uid), {
+            uid: user.uid,
+            name: "",
+            email: user.email,
+            profileImage: "",
+            createdAt: user.metadata.creationTime,
+          });
+        }
       })
       .catch((error) => {
-        console.log(error);
         throwLoginError(error.code);
       })
       .finally(() => setIsLoading(false));

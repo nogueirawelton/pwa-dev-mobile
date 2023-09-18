@@ -5,6 +5,7 @@ const errorMap = {
     "Esta conta já existe com uma credencial diferente!",
   "auth/email-already-in-use": "Já existe uma conta com este email!",
   "auth/invalid-login-credentials": "Email ou senha inválidos!",
+  "auth/waiting-email-verification": "Email não verificado! ",
 };
 
 export default function throwLoginError(error: string) {
