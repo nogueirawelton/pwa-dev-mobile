@@ -5,14 +5,12 @@ import { useCallback, useState } from "react";
 import { CircleNotch, Eye, EyeClosed } from "phosphor-react";
 import {
   createUserWithEmailAndPassword,
-  sendEmailVerification,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import throwLoginError from "../../../utils/throwLoginError";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../../services/firebase";
-import throwSuccessMessage from "../../../utils/throwSuccessMessage";
 
 interface FormProps {
   isLogin: boolean;
@@ -21,7 +19,6 @@ interface FormProps {
 export function Form({ isLogin }: FormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
   const { search } = useLocation();
   const registeredEmail = new URLSearchParams(search).get("email") || "";
 
@@ -74,10 +71,13 @@ export function Form({ isLogin }: FormProps) {
 
   const createAccount = useCallback((email: string, password: string) => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then(async ({ user }) => {
-        return sendEmailVerification(user).then(() => {
-          navigate(`/login?email=${user.email}`);
-          throwSuccessMessage("Email de confirmação enviado!");
+      .then(({ user }) => {
+        setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          name: "",
+          email: user.email,
+          profileImage: "",
+          createdAt: user.metadata.creationTime,
         });
       })
       .catch((error) => {
@@ -88,25 +88,6 @@ export function Form({ isLogin }: FormProps) {
 
   const loginWithAccount = useCallback((email: string, password: string) => {
     signInWithEmailAndPassword(auth, email, password)
-      .then(async (loginData) => {
-        const { user } = loginData;
-        const dbUser = await getDoc(doc(db, "users", user.uid));
-
-        if (!user.emailVerified) {
-          throwLoginError("auth/waiting-email-verification");
-          return;
-        }
-
-        if (!dbUser.exists()) {
-          setDoc(doc(db, "users", user.uid), {
-            uid: user.uid,
-            name: "",
-            email: user.email,
-            profileImage: "",
-            createdAt: user.metadata.creationTime,
-          });
-        }
-      })
       .catch((error) => {
         throwLoginError(error.code);
       })

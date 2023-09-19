@@ -26,25 +26,18 @@ export function AuthContextProvider({ children }: AuthContextProps) {
 
   const navigate = useNavigate();
 
-  function authUser(user: User | null) {
-    setUser(user);
-    console.log("Sign In", location.href);
-    navigate("/admin");
-  }
-
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
-      if (!user || !user.emailVerified) {
+      if (!user) {
         if (location.href.includes("admin")) {
-          console.log("Sign Out", location.href);
-          console.log(user, user?.emailVerified);
           navigate("/login");
           return;
         }
       }
 
-      if (user && user.emailVerified) {
-        authUser(user);
+      if (user) {
+        setUser(user);
+        navigate("/admin");
       }
     });
 
