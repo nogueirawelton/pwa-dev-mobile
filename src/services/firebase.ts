@@ -5,6 +5,7 @@ import { getDatabase } from "firebase/database";
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: "https://wn-pwa-default-rtdb.firebaseio.com",
   projectId: "wn-pwa",
   storageBucket: "wn-pwa.appspot.com",
   messagingSenderId: "15906840472",
