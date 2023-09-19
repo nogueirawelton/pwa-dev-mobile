@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 import { useLocation } from "react-router-dom";
 import throwLoginError from "../../../utils/throwLoginError";
-import { doc, setDoc } from "firebase/firestore";
+import { ref, set } from "firebase/database";
 import { auth, db } from "../../../services/firebase";
 
 interface FormProps {
@@ -72,7 +72,7 @@ export function Form({ isLogin }: FormProps) {
   const createAccount = useCallback((email: string, password: string) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(({ user }) => {
-        setDoc(doc(db, "users", user.uid), {
+        set(ref(db, `users/${user.uid}`), {
           uid: user.uid,
           name: "",
           email: user.email,
