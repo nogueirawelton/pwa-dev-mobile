@@ -73,7 +73,6 @@ export function Form({ isLogin }: FormProps) {
     createUserWithEmailAndPassword(auth, email, password)
       .then(({ user }) => {
         set(ref(db, `users/${user.uid}`), {
-          uid: user.uid,
           name: "",
           email: user.email,
           profileImage: "",

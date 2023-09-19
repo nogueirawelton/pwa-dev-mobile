@@ -29,7 +29,6 @@ export function OAuthButton({
 
         if (isNewUser) {
           set(ref(db, `users/${user.uid}`), {
-            uid: user.uid,
             name: user.displayName,
             email: user.email,
             profileImage: user.photoURL,
