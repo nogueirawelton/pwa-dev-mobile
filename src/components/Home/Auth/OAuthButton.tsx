@@ -6,7 +6,7 @@ import {
 import { ReactNode } from "react";
 import { ComponentProps } from "react";
 import throwLoginError from "../../../utils/throwLoginError";
-import { doc, setDoc } from "firebase/firestore";
+import { ref, set } from "firebase/database";
 import { auth, db } from "../../../services/firebase";
 
 interface OAuthButtonProps extends ComponentProps<"button"> {
@@ -28,7 +28,7 @@ export function OAuthButton({
         const { user } = loginData;
 
         if (isNewUser) {
-          setDoc(doc(db, "users", user.uid), {
+          set(ref(db, `users/${user.uid}`), {
             uid: user.uid,
             name: user.displayName,
             email: user.email,
