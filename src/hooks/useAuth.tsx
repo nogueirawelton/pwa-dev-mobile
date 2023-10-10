@@ -1,4 +1,4 @@
-import { User, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { CircleNotch } from "phosphor-react";
 import {
   ReactNode,
@@ -8,10 +8,19 @@ import {
   useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../services/firebase";
+import { auth, db } from "../services/firebase";
+import { child, get, ref } from "firebase/database";
+import { toast } from "react-toastify";
 
 interface AuthContextProps {
   children: ReactNode;
+}
+
+interface User {
+  createdAt: Date;
+  email: string;
+  name?: string;
+  profileImage?: string;
 }
 
 interface AuthContext {
@@ -36,8 +45,18 @@ export function AuthContextProvider({ children }: AuthContextProps) {
       }
 
       if (user) {
-        setUser(user);
-        navigate("/admin");
+        const userID = user.uid;
+
+        try {
+          const realtimeUserData = await get(child(ref(db), `users/${userID}`));
+
+          setUser(realtimeUserData.val());
+          navigate("/admin");
+        } catch (err) {
+          signOut(auth);
+          navigate("/login");
+          toast.error("Erro ao obter dados do usuário");
+        }
       }
     });
 
