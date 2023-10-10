@@ -3,7 +3,11 @@ import { Nav } from "./Nav";
 import { User } from "./User";
 import { WalletSelect } from "./WalletSelect";
 
-export function Sidebar() {
+interface SidebarProps {
+  closeMenu: () => void;
+}
+
+export function Sidebar({ closeMenu }: SidebarProps) {
   return (
     <aside className="fixed top-0 z-40 flex h-screen w-screen flex-col justify-between bg-zinc-900 px-4 py-5 sm:w-80 lg:static">
       <div>
@@ -14,7 +18,7 @@ export function Sidebar() {
           </div>
         </div>
         <WalletSelect />
-        <Nav />
+        <Nav closeMenu={closeMenu} />
       </div>
       <User />
     </aside>

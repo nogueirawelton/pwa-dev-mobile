@@ -10,7 +10,11 @@ import {
 import { NavLink, useLocation } from "react-router-dom";
 import { auth } from "../../../firebase";
 
-export function Nav() {
+interface NavProps {
+  closeMenu: () => void;
+}
+
+export function Nav({ closeMenu }: NavProps) {
   const { pathname } = useLocation();
 
   function handleLogout() {
@@ -22,6 +26,7 @@ export function Nav() {
       <strong className="text-xs font-medium text-zinc-500">Navegação</strong>
       <nav className="mt-4 flex flex-col items-start gap-2 text-zinc-100">
         <NavLink
+          onClick={closeMenu}
           data-current={pathname === "/admin"}
           to="/admin"
           className="flex w-full items-center gap-3 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-zinc-800 data-[current=true]:bg-zinc-800"
@@ -30,6 +35,7 @@ export function Nav() {
           Dashboard
         </NavLink>
         <NavLink
+          onClick={closeMenu}
           to="/admin/transactions"
           className="flex w-full items-center gap-3 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-zinc-800 aria-[current]:bg-zinc-800"
         >
@@ -37,6 +43,7 @@ export function Nav() {
           Transações
         </NavLink>
         <NavLink
+          onClick={closeMenu}
           to="/admin/schedules"
           className="flex w-full items-center gap-3 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-zinc-800 aria-[current]:bg-zinc-800"
         >
@@ -44,6 +51,7 @@ export function Nav() {
           Agendamentos
         </NavLink>
         <NavLink
+          onClick={closeMenu}
           to="/admin/wallets"
           className="flex w-full items-center gap-3 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-zinc-800 aria-[current]:bg-zinc-800"
         >
@@ -51,6 +59,7 @@ export function Nav() {
           Carteiras
         </NavLink>
         <NavLink
+          onClick={closeMenu}
           to="/admin/profile"
           className="flex w-full items-center gap-3 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-zinc-800 aria-[current]:bg-zinc-800"
         >

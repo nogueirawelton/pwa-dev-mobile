@@ -15,13 +15,15 @@ export function AdminLayout() {
   const { pathname } = useLocation();
   const { user } = useAuth();
 
-  if (!user) return null;
-
   const currentDate = format(new Date(), "EEEE, dd 'de' MMMM 'de' Y", {
     locale: ptBR,
   });
 
   const currentHour = new Date().getHours();
+
+  function closeMenu() {
+    setIsMenuOpen(false);
+  }
 
   return (
     <Collapsible.Root
@@ -31,9 +33,9 @@ export function AdminLayout() {
     >
       <Collapsible.Content
         forceMount
-        className="data-[state=open]:animate-float-right data-[state=closed]:hidden lg:data-[state=closed]:block"
+        className="data-[state=closed]:hidden data-[state=open]:animate-float-right lg:data-[state=closed]:block"
       >
-        <Sidebar />
+        <Sidebar closeMenu={closeMenu} />
       </Collapsible.Content>
       <main className="flex-1 space-y-4 divide-y divide-zinc-200 bg-zinc-100 px-6 py-4 text-zinc-900 lg:rounded-bl-lg lg:rounded-tl-lg">
         <header className="flex items-center justify-between">
@@ -43,7 +45,7 @@ export function AdminLayout() {
             </small>
             <strong className="text-xl font-semibold text-zinc-900">
               {getDayPeriodMessage(currentHour)}
-              {user.name ? `, ${user.name.split(" ")[0]}` : ""}
+              {user?.name ? `, ${user.name.split(" ")[0]}` : ""}
             </strong>
           </div>
           <Collapsible.Trigger asChild>
