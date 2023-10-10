@@ -42,7 +42,10 @@ export function AuthContextProvider({ children }: AuthContextProps) {
         const realtimeUserData = await get(child(ref(db), `users/${userID}`));
 
         setUser(realtimeUserData.val());
-        navigate("/admin");
+
+        if (!location.href.includes("admin")) {
+          navigate("/admin");
+        }
       }
     });
 

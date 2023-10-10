@@ -58,7 +58,7 @@ export function Nav() {
           Perfil
         </NavLink>
         <button
-          className="flex w-full items-center gap-3 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-zinc-800 aria-[current]:bg-zinc-800"
+          className="mt-4 flex w-full items-center gap-3 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-zinc-800 aria-[current]:bg-zinc-800"
           onClick={handleLogout}
         >
           <SignOut className="h-6 w-6" />
