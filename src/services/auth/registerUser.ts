@@ -5,9 +5,9 @@ import { v4 } from "uuid";
 
 export default function registerUser(user: User) {
   set(ref(db, `users/${user.uid}`), {
-    name: "",
+    name: user.displayName,
     email: user.email,
-    profileImage: "",
+    profileImage: user.photoURL,
     createdAt: user.metadata.creationTime,
     wallets: [
       {
