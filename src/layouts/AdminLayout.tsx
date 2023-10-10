@@ -1,16 +1,65 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { Dashboard } from "../pages/Dashboard";
 import { Sidebar } from "../components/Admin/Sidebar";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import getDayPeriodMessage from "../utils/getDayPeriodMessage";
+import { useAuth } from "../hooks/useAuth";
+import { List, X } from "phosphor-react";
+import * as Collapsible from "@radix-ui/react-collapsible";
+import { useState } from "react";
 
 export function AdminLayout() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const { pathname } = useLocation();
+  const { user } = useAuth();
+
+  if (!user) return null;
+
+  const currentDate = format(new Date(), "EEEE, dd 'de' MMMM 'de' Y", {
+    locale: ptBR,
+  });
+
+  const currentHour = new Date().getHours();
 
   return (
-    <div className="grid h-screen grid-cols-[275px_1fr] text-zinc-100">
-      <Sidebar />
-      <main className="rounded-bl-lg rounded-tl-lg bg-zinc-100 text-zinc-900">
-        {pathname == "/admin" ? <Dashboard /> : <Outlet />}
+    <Collapsible.Root
+      className="flex h-screen text-zinc-100"
+      open={isMenuOpen}
+      onOpenChange={setIsMenuOpen}
+    >
+      <Collapsible.Content
+        forceMount
+        className="data-[state=open]:animate-float-right data-[state=closed]:hidden lg:data-[state=closed]:block"
+      >
+        <Sidebar />
+      </Collapsible.Content>
+      <main className="flex-1 space-y-4 divide-y divide-zinc-200 bg-zinc-100 px-6 py-4 text-zinc-900 lg:rounded-bl-lg lg:rounded-tl-lg">
+        <header className="flex items-center justify-between">
+          <div className="flex flex-col">
+            <small className="text-sm font-semibold capitalize text-zinc-600">
+              {currentDate}
+            </small>
+            <strong className="text-xl font-semibold text-zinc-900">
+              {getDayPeriodMessage(currentHour)}
+              {user.name ? `, ${user.name.split(" ")[0]}` : ""}
+            </strong>
+          </div>
+          <Collapsible.Trigger asChild>
+            <button className="relative z-50">
+              {isMenuOpen ? (
+                <X className="h-8 w-8 text-zinc-100 sm:text-zinc-900 lg:hidden" />
+              ) : (
+                <List className="h-8 w-8 text-zinc-900 lg:hidden" />
+              )}
+            </button>
+          </Collapsible.Trigger>
+        </header>
+        <div className="pt-4">
+          {pathname == "/admin" ? <Dashboard /> : <Outlet />}
+        </div>
       </main>
-    </div>
+    </Collapsible.Root>
   );
 }

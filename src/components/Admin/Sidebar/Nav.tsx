@@ -8,7 +8,7 @@ import {
   Wallet,
 } from "phosphor-react";
 import { NavLink, useLocation } from "react-router-dom";
-import { auth } from "../../../services/firebase";
+import { auth } from "../../../firebase";
 
 export function Nav() {
   const { pathname } = useLocation();

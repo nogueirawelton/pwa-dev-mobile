@@ -3,15 +3,14 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useState } from "react";
 import { CircleNotch, Eye, EyeClosed } from "phosphor-react";
-import { v4 } from "uuid";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useLocation } from "react-router-dom";
 import throwLoginError from "../../../utils/throwLoginError";
-import { ref, set } from "firebase/database";
-import { auth, db } from "../../../services/firebase";
+import { auth } from "../../../firebase";
+import registerUser from "../../../services/auth/registerUser";
 
 interface FormProps {
   isLogin: boolean;
@@ -73,20 +72,7 @@ export function Form({ isLogin }: FormProps) {
   const createAccount = useCallback((email: string, password: string) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(({ user }) => {
-        set(ref(db, `users/${user.uid}`), {
-          name: "",
-          email: user.email,
-          profileImage: "",
-          createdAt: user.metadata.creationTime,
-          wallets: [
-            {
-              uid: v4(),
-              name: "Finanças",
-              balance: 0,
-              createdAt: user.metadata.creationTime,
-            },
-          ],
-        });
+        registerUser(user);
       })
       .catch((error) => {
         throwLoginError(error.code);

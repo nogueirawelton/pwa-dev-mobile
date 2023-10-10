@@ -1,4 +1,4 @@
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { CircleNotch } from "phosphor-react";
 import {
   ReactNode,
@@ -7,10 +7,9 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { auth, db } from "../services/firebase";
+import { useNavigate } from "react-router-dom";
+import { auth, db } from "../firebase";
 import { child, get, ref } from "firebase/database";
-import { toast } from "react-toastify";
 import { User } from "../@types/User";
 
 interface AuthContextProps {
@@ -27,33 +26,23 @@ export function AuthContextProvider({ children }: AuthContextProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { pathname } = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
+    onAuthStateChanged(auth, async (userData) => {
+      if (!userData) {
         if (location.href.includes("admin")) {
           navigate("/login");
           return;
         }
       }
 
-      if (user) {
-        const userID = user.uid;
+      if (userData) {
+        const userID = userData.uid;
         const realtimeUserData = await get(child(ref(db), `users/${userID}`));
 
-        if (!realtimeUserData.val()) {
-          signOut(auth);
-          navigate("/login");
-          toast.error("Erro ao obter dados do usuário");
-        }
-
         setUser(realtimeUserData.val());
-
-        if (!pathname.includes("admin")) {
-          navigate("/admin");
-        }
+        navigate("/admin");
       }
     });
 

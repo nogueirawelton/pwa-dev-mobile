@@ -6,6 +6,7 @@ export function WalletSelect() {
   const { user } = useAuth();
 
   if (!user) return null;
+
   const mainWalletID = user.wallets[0].uid;
 
   return (

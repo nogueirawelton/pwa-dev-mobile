@@ -6,9 +6,8 @@ import {
 import { ReactNode } from "react";
 import { ComponentProps } from "react";
 import throwLoginError from "../../../utils/throwLoginError";
-import { ref, set } from "firebase/database";
-import { auth, db } from "../../../services/firebase";
-import { v4 } from "uuid";
+import { auth } from "../../../firebase";
+import registerUser from "../../../services/auth/registerUser";
 
 interface OAuthButtonProps extends ComponentProps<"button"> {
   children: ReactNode;
@@ -29,21 +28,9 @@ export function OAuthButton({
         const { user } = loginData;
 
         if (isNewUser) {
-          set(ref(db, `users/${user.uid}`), {
-            name: user.displayName,
-            email: user.email,
-            profileImage: user.photoURL,
-            createdAt: user.metadata.creationTime,
-            wallets: [
-              {
-                uid: v4(),
-                name: "Finanças",
-                balance: 0,
-                createdAt: user.metadata.creationTime,
-              },
-            ],
-          });
+          registerUser(user);
         }
+        
       })
       .catch(({ code }) => {
         throwLoginError(code);
