@@ -13,7 +13,10 @@ export function Router() {
         <Route path="/login" element={<Login />} />
       </Route>
       <Route path="/admin" element={<AdminLayout />}>
-        <Route path="/admin/notifications" element={<p>Notifications</p>} />
+        <Route path="/admin/transactions" element={<p>Transactions</p>} />
+        <Route path="/admin/schedules" element={<p>Schedules</p>} />
+        <Route path="/admin/wallets" element={<p>Wallets</p>} />
+        <Route path="/admin/profile" element={<p>Profile</p>} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

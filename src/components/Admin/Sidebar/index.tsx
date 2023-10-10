@@ -1,5 +1,6 @@
 import { Logo } from "../../Logo";
-import { Logout } from "./Logout";
+import { Nav } from "./Nav";
+import { User } from "./User";
 import { WalletSelect } from "./WalletSelect";
 
 export function Sidebar() {
@@ -11,9 +12,9 @@ export function Sidebar() {
           KpzFinances
         </header>
         <WalletSelect />
-        <nav></nav>
+        <Nav />
       </div>
-      <Logout />
+      <User />
     </aside>
   );
 }

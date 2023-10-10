@@ -1,7 +1,6 @@
-import { CaretDown } from "phosphor-react";
 import { useAuth } from "../../../hooks/useAuth";
 
-export function Logout() {
+export function User() {
   const { user } = useAuth();
 
   if (!user) return null;
@@ -23,7 +22,6 @@ export function Logout() {
       <span className="truncate whitespace-nowrap">
         {user.name ? user.name : user.email}
       </span>
-      <CaretDown className="h-3 w-3 shrink-0" />
     </button>
   );
 }

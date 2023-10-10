@@ -7,20 +7,14 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { auth, db } from "../services/firebase";
 import { child, get, ref } from "firebase/database";
 import { toast } from "react-toastify";
+import { User } from "../@types/User";
 
 interface AuthContextProps {
   children: ReactNode;
-}
-
-interface User {
-  createdAt: Date;
-  email: string;
-  name?: string;
-  profileImage?: string;
 }
 
 interface AuthContext {
@@ -33,6 +27,7 @@ export function AuthContextProvider({ children }: AuthContextProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const { pathname } = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,16 +41,18 @@ export function AuthContextProvider({ children }: AuthContextProps) {
 
       if (user) {
         const userID = user.uid;
+        const realtimeUserData = await get(child(ref(db), `users/${userID}`));
 
-        try {
-          const realtimeUserData = await get(child(ref(db), `users/${userID}`));
-
-          setUser(realtimeUserData.val());
-          navigate("/admin");
-        } catch (err) {
+        if (!realtimeUserData.val()) {
           signOut(auth);
           navigate("/login");
           toast.error("Erro ao obter dados do usuário");
+        }
+
+        setUser(realtimeUserData.val());
+
+        if (!pathname.includes("admin")) {
+          navigate("/admin");
         }
       }
     });

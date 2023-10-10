@@ -8,6 +8,7 @@ import { ComponentProps } from "react";
 import throwLoginError from "../../../utils/throwLoginError";
 import { ref, set } from "firebase/database";
 import { auth, db } from "../../../services/firebase";
+import { v4 } from "uuid";
 
 interface OAuthButtonProps extends ComponentProps<"button"> {
   children: ReactNode;
@@ -33,6 +34,14 @@ export function OAuthButton({
             email: user.email,
             profileImage: user.photoURL,
             createdAt: user.metadata.creationTime,
+            wallets: [
+              {
+                uid: v4(),
+                name: "Finanças",
+                balance: 0,
+                createdAt: user.metadata.creationTime,
+              },
+            ],
           });
         }
       })

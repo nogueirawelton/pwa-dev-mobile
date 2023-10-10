@@ -3,6 +3,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useState } from "react";
 import { CircleNotch, Eye, EyeClosed } from "phosphor-react";
+import { v4 } from "uuid";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -77,6 +78,14 @@ export function Form({ isLogin }: FormProps) {
           email: user.email,
           profileImage: "",
           createdAt: user.metadata.creationTime,
+          wallets: [
+            {
+              uid: v4(),
+              name: "Finanças",
+              balance: 0,
+              createdAt: user.metadata.creationTime,
+            },
+          ],
         });
       })
       .catch((error) => {
@@ -98,7 +107,7 @@ export function Form({ isLogin }: FormProps) {
       <div>
         <div data-filled={!!email?.length} className="group relative">
           <label
-            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 bg-zinc-900 px-2 text-zinc-700 transition-all duration-300 group-focus-within:left-2 group-focus-within:top-0 group-focus-within:text-zinc-100 group-data-[filled=true]:left-2 group-data-[filled=true]:top-0 group-data-[filled=true]:text-white"
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 bg-zinc-900 px-2 text-zinc-700 transition-all duration-300 group-focus-within:left-2 group-focus-within:top-0 group-focus-within:text-zinc-100 group-data-[filled=true]:left-2 group-data-[filled=true]:top-0 group-data-[filled=true]:text-zinc-100"
             htmlFor="email"
           >
             Endereço de E-mail
@@ -118,7 +127,7 @@ export function Form({ isLogin }: FormProps) {
       <div>
         <div data-filled={!!password?.length} className="group relative">
           <label
-            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 bg-zinc-900 px-2 text-zinc-700 transition-all duration-300 group-focus-within:left-2 group-focus-within:top-0 group-focus-within:text-zinc-100 group-data-[filled=true]:left-2 group-data-[filled=true]:top-0 group-data-[filled=true]:text-white"
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 bg-zinc-900 px-2 text-zinc-700 transition-all duration-300 group-focus-within:left-2 group-focus-within:top-0 group-focus-within:text-zinc-100 group-data-[filled=true]:left-2 group-data-[filled=true]:top-0 group-data-[filled=true]:text-zinc-100"
             htmlFor="password"
           >
             Senha
@@ -157,7 +166,7 @@ export function Form({ isLogin }: FormProps) {
         disabled={isLoading}
       >
         {isLoading ? (
-          <CircleNotch className="h-6 w-6 animate-spin text-white" />
+          <CircleNotch className="h-6 w-6 animate-spin text-zinc-100" />
         ) : (
           "Continuar"
         )}
