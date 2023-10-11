@@ -4,17 +4,16 @@ import { Sidebar } from "../components/Admin/Sidebar";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import getDayPeriodMessage from "../utils/getDayPeriodMessage";
-import { useAuth } from "../hooks/useAuth";
 import { List, X } from "phosphor-react";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { useState } from "react";
+import { useUserDataStore } from "../stores/userData";
 
 export function AdminLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { pathname } = useLocation();
-  const { user } = useAuth();
-
+  const user = useUserDataStore((state) => state.userData);
   const currentDate = format(new Date(), "EEEE, dd 'de' MMMM 'de' Y", {
     locale: ptBR,
   });

@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../../../hooks/useAuth";
+import { useUserDataStore } from "../../../stores/userData";
 
 export function User() {
-  const { user } = useAuth();
+  const user = useUserDataStore((state) => state.userData);
 
   if (!user) return null;
 

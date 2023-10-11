@@ -1,9 +1,9 @@
 import * as Select from "@radix-ui/react-select";
 import { CaretDown, CurrencyDollar } from "phosphor-react";
-import { useAuth } from "../../../hooks/useAuth";
+import { useUserDataStore } from "../../../stores/userData";
 
 export function WalletSelect() {
-  const { user } = useAuth();
+  const user = useUserDataStore((state) => state.userData);
 
   if (!user) return null;
 

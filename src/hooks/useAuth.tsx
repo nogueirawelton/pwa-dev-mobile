@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
 import { child, get, ref } from "firebase/database";
 import { User } from "../@types/User";
+import { useUserDataStore } from "../stores/userData";
 
 interface AuthContextProps {
   children: ReactNode;
@@ -20,12 +21,11 @@ interface AuthContext {
   user: User | null;
 }
 
-const AuthContext = createContext({} as AuthContext);
+const AuthContext = createContext({});
 
 export function AuthContextProvider({ children }: AuthContextProps) {
-  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
+  const loadUserData = useUserDataStore((state) => state.loadUserData);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export function AuthContextProvider({ children }: AuthContextProps) {
         const userID = userData.uid;
         const realtimeUserData = await get(child(ref(db), `users/${userID}`));
 
-        setUser(realtimeUserData.val());
+        loadUserData(realtimeUserData.val());
 
         if (!location.href.includes("admin")) {
           navigate("/admin");
@@ -62,15 +62,7 @@ export function AuthContextProvider({ children }: AuthContextProps) {
     );
   }
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{}}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

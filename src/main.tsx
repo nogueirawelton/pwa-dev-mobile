@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
 import { App } from "./App.tsx";
-import "./styles/index.css";
+import "./styles/global.css";
 import "react-toastify/dist/ReactToastify.min.css";
 import React from "react";
 
