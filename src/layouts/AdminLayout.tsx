@@ -26,17 +26,17 @@ export function AdminLayout() {
 
   return (
     <Collapsible.Root
-      className="flex h-screen text-zinc-100"
+      className="flex h-screen w-screen text-zinc-100"
       open={isMenuOpen}
       onOpenChange={setIsMenuOpen}
     >
       <Collapsible.Content
         forceMount
-        className="data-[state=closed]:hidden data-[state=open]:animate-float-right lg:data-[state=closed]:block"
+        className="z-50 data-[state=closed]:hidden data-[state=open]:animate-float-right lg:data-[state=closed]:block"
       >
         <Sidebar closeMenu={closeMenu} />
       </Collapsible.Content>
-      <main className="flex-1 space-y-4 divide-y divide-zinc-200 bg-zinc-100 px-6 py-4 text-zinc-900 lg:rounded-bl-lg lg:rounded-tl-lg">
+      <main className="flex-1 space-y-4 divide-y divide-zinc-200 overflow-hidden bg-white px-6 py-4 text-zinc-900 lg:rounded-bl-lg lg:rounded-tl-lg ">
         <header className="flex items-center justify-between">
           <div className="flex flex-col">
             <small className="text-sm font-semibold capitalize text-zinc-600">
