@@ -27,7 +27,11 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
           </thead>
           <tbody>
             {transactions?.map((transaction, index) => (
-              <TransactionItem data={transaction} isOdd={index % 2 == 0} />
+              <TransactionItem
+                key={transaction.uid}
+                data={transaction}
+                isOdd={index % 2 == 0}
+              />
             ))}
           </tbody>
         </table>

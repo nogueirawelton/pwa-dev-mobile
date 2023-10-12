@@ -13,12 +13,12 @@ export function TransactionItem({
 }: TransactionProps) {
   return (
     <tr
-      className="h-20 whitespace-nowrap rounded-md text-zinc-700  ring-zinc-50 data-[odd=true]:bg-zinc-50 data-[odd=true]:ring-1"
+      className="h-20 whitespace-nowrap rounded-md text-zinc-700  ring-zinc-50 data-[odd=false]:bg-zinc-50 data-[odd=true]:ring-1"
       data-odd={isOdd}
     >
       <td className="px-6 font-medium">{name}</td>
       <td
-        className="px-6 font-medium data-[type=deposit]:text-green-600 data-[type=withdraw]:text-red-600"
+        className="px-6 font-medium data-[type=DEPOSIT]:text-green-600 data-[type=WITHDRAW]:text-red-600"
         data-type={type}
       >
         {type == TransactionTypes.DEPOSIT && (

@@ -4,6 +4,9 @@ import { TransactionsTable } from "../components/Admin/Global/TransactionsTable"
 import { useUserDataStore } from "../stores/userData";
 
 export function Dashboard() {
+  const userData = useUserDataStore((state) => state.userData);
+
+  console.log(userData);
   const recentTransactions =
     useUserDataStore((state) => state.userData?.wallets[0].transactions)?.slice(
       0,

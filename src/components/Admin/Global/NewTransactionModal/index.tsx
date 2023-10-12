@@ -2,17 +2,29 @@ import { X } from "phosphor-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { TransactionCategorySelect } from "./TransactionCategorySelect";
 import { TransactionRadioTypes } from "./TransactionRadioTypes";
 import { zodResolver } from "@hookform/resolvers/zod";
+import createNewTransaction from "../../../../services/transactions/createNewTransaction";
+import { Transaction } from "../../../../@types/Transaction";
+import { TransactionTypes } from "../../../../@types/TransactionTypes";
+import { useUserDataStore } from "../../../../stores/userData";
 
 interface NewTransactionModalProps {
   children: ReactNode;
 }
 
 export function NewTransactionModal({ children }: NewTransactionModalProps) {
+  const [open, setOpen] = useState(false);
+
+  const userID = useUserDataStore((state) => state.userData?.uid);
+  const walletID = useUserDataStore((state) => state.currentWalletID);
+  const insertNewTransaction = useUserDataStore(
+    (state) => state.insertNewTransaction,
+  );
+
   // ---------- HOOK FORM CONFIG ---------- //
 
   const formSchema = z.object({
@@ -26,24 +38,39 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
     description: z.string(),
   });
 
-  type FormData = z.infer<typeof formSchema>;
-
   const {
     register,
     handleSubmit,
     control,
     reset,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<Transaction>({
+    defaultValues: {
+      name: "",
+      date: new Date().toLocaleDateString("en-CA"),
+      amount: "",
+      category: undefined,
+      type: TransactionTypes.DEPOSIT,
+      description: "",
+    },
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<Transaction> = async (data) => {
+    const newTransactionID = await createNewTransaction(data, userID, walletID);
+
+    insertNewTransaction(walletID!, { ...data, uid: newTransactionID });
+    setOpen(false);
   };
 
   return (
-    <Dialog.Root onOpenChange={() => reset()}>
+    <Dialog.Root
+      open={open}
+      onOpenChange={(value) => {
+        reset();
+        setOpen(value);
+      }}
+    >
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-[rgba(0,0,0,0.6)]" />
@@ -73,7 +100,6 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
               <div>
                 <input
                   {...register("date")}
-                  defaultValue={new Date().toLocaleDateString("en-CA")}
                   type="date"
                   className="px- h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-4 placeholder:text-zinc-400"
                 />

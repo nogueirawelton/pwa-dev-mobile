@@ -29,7 +29,7 @@ export function AuthContextProvider({ children }: AuthContextProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    onAuthStateChanged(auth, async (userData) => {
+    onAuthStateChanged(auth, (userData) => {
       if (!userData) {
         if (location.href.includes("admin")) {
           navigate("/login");
@@ -39,9 +39,24 @@ export function AuthContextProvider({ children }: AuthContextProps) {
 
       if (userData) {
         const userID = userData.uid;
-        const realtimeUserData = await get(child(ref(db), `users/${userID}`));
 
-        loadUserData(realtimeUserData.val());
+        get(child(ref(db), `users/${userID}`)).then((realtimeUserData) => {
+          const parsedData: User = realtimeUserData.val();
+
+          loadUserData({
+            ...parsedData,
+            wallets: parsedData.wallets
+              ? Object.values(parsedData.wallets).map((wallet) => {
+                  return {
+                    ...wallet,
+                    transactions: wallet.transactions
+                      ? Object.values(wallet.transactions)
+                      : [],
+                  };
+                })
+              : [],
+          });
+        });
 
         if (!location.href.includes("admin")) {
           navigate("/admin");

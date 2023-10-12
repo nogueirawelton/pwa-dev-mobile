@@ -14,7 +14,6 @@ export const TransactionRadioTypes = forwardRef<
       {...field}
       ref={ref}
       className="grid grid-cols-2 gap-4"
-      defaultValue={TransactionTypes.DEPOSIT}
     >
       <RadioGroup.Item
         value={TransactionTypes.DEPOSIT}
