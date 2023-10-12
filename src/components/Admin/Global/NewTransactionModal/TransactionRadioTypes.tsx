@@ -13,7 +13,7 @@ export const TransactionRadioTypes = forwardRef<
       onValueChange={(value) => onChange(value)}
       {...field}
       ref={ref}
-      className="flex gap-4"
+      className="grid grid-cols-2 gap-4"
       defaultValue={TransactionTypes.DEPOSIT}
     >
       <RadioGroup.Item

@@ -17,7 +17,7 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
 
   const formSchema = z.object({
     name: z.string().min(1, "Nome Inválido"),
-    date: z.string(),
+    date: z.string().nonempty("Data não Selecionada"),
     amount: z
       .string({ required_error: "Valor não informado" })
       .refine((amount) => Number(amount) >= 1, "Valor Inválido"),
@@ -47,7 +47,7 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-[rgba(0,0,0,0.6)]" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-[95%] max-w-xl origin-center rounded-md bg-zinc-50 p-8 shadow-sm data-[state=open]:animate-zoom-in">
+        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-[95%] max-w-xl origin-center rounded-md bg-zinc-50 p-6 shadow-sm data-[state=open]:animate-zoom-in lg:p-8">
           <Dialog.Title className="mb-4 text-2xl font-bold text-zinc-900">
             Cadastrar Transação
           </Dialog.Title>
@@ -69,14 +69,19 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
                 <small className="text-red-500">{errors.name.message}</small>
               )}
             </div>
-            <div className="flex gap-4">
-              <input
-                {...register("date")}
-                defaultValue={new Date().toLocaleDateString("en-CA")}
-                type="date"
-                className="px- h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-4 placeholder:text-zinc-400"
-              />
-              <div className="w-full ">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <input
+                  {...register("date")}
+                  defaultValue={new Date().toLocaleDateString("en-CA")}
+                  type="date"
+                  className="px- h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-4 placeholder:text-zinc-400"
+                />
+                {errors.date && (
+                  <small className="text-red-500">{errors.date.message}</small>
+                )}
+              </div>
+              <div>
                 <Controller
                   control={control}
                   name="amount"
