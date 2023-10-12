@@ -1,9 +1,9 @@
-import { User } from "firebase/auth";
+import { User, createUserWithEmailAndPassword } from "firebase/auth";
 import { ref, set } from "firebase/database";
-import { db } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { v4 } from "uuid";
 
-export default function registerUser(user: User) {
+export async function registerUserOnDatabase(user: User) {
   const defaultWalletID = v4();
 
   set(ref(db, `users/${user.uid}`), {
@@ -20,4 +20,10 @@ export default function registerUser(user: User) {
       createdAt: user.metadata.creationTime,
     });
   });
+}
+
+export async function createAccount(email: string, password: string) {
+  const { user } = await createUserWithEmailAndPassword(auth, email, password);
+
+  await registerUserOnDatabase(user);
 }

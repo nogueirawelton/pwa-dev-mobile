@@ -1,13 +1,9 @@
-import {
-  AuthProvider,
-  getAdditionalUserInfo,
-  signInWithPopup,
-} from "firebase/auth";
+import { AuthProvider } from "firebase/auth";
 import { ReactNode } from "react";
 import { ComponentProps } from "react";
 import throwLoginError from "../../../utils/throwLoginError";
-import { auth } from "../../../firebase";
-import registerUser from "../../../services/auth/registerUser";
+import { useNavigate } from "react-router-dom";
+import { loginWithOAuth } from "../../../services/auth/loginWithOAuth";
 
 interface OAuthButtonProps extends ComponentProps<"button"> {
   children: ReactNode;
@@ -19,22 +15,15 @@ export function OAuthButton({
   provider,
   ...props
 }: OAuthButtonProps) {
-  function handleLogin() {
-    auth.useDeviceLanguage();
+  const navigate = useNavigate();
 
-    signInWithPopup(auth, provider)
-      .then((loginData) => {
-        const { isNewUser } = getAdditionalUserInfo(loginData)!;
-        const { user } = loginData;
-
-        if (isNewUser) {
-          registerUser(user);
-        }
-        
-      })
-      .catch(({ code }) => {
-        throwLoginError(code);
-      });
+  async function handleLogin() {
+    try {
+      await loginWithOAuth(provider);
+      navigate("/admin");
+    } catch ({ code }: any) {
+      throwLoginError(code);
+    }
   }
 
   return (

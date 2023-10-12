@@ -1,16 +1,12 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { CircleNotch, Eye, EyeClosed } from "phosphor-react";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { createAccount } from "../../../services/auth/registerUser";
+import { loginWithEmailAndPassword } from "../../../services/auth/loginWithEmailAndPassword";
 import throwLoginError from "../../../utils/throwLoginError";
-import { auth } from "../../../firebase";
-import registerUser from "../../../services/auth/registerUser";
 
 interface FormProps {
   isLogin: boolean;
@@ -19,8 +15,7 @@ interface FormProps {
 export function Form({ isLogin }: FormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { search } = useLocation();
-  const registeredEmail = new URLSearchParams(search).get("email") || "";
+  const navigate = useNavigate();
 
   // ---------- HOOK FORM CONFIG ---------- //
 
@@ -42,10 +37,6 @@ export function Form({ isLogin }: FormProps) {
     watch,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: {
-      email: registeredEmail,
-      password: "",
-    },
     resolver: zodResolver(formSchema),
   });
 
@@ -55,38 +46,29 @@ export function Form({ isLogin }: FormProps) {
 
   // ---------- FORM SUBMIT EVENT ---------- //
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     const { email, password } = data;
 
     setIsLoading(true);
 
     if (isLogin) {
-      loginWithAccount(email, password);
+      try {
+        await loginWithEmailAndPassword(email, password);
+      } catch ({ code }: any) {
+        throwLoginError(code);
+        setIsLoading(false);
+      }
       return;
     }
-    createAccount(email, password);
+
+    try {
+      await createAccount(email, password);
+      navigate("/admin");
+    } catch ({ code }: any) {
+      throwLoginError(code);
+      setIsLoading(false);
+    }
   };
-
-  // ---------- AUTH FUNCTIONS ---------- //
-
-  const createAccount = useCallback((email: string, password: string) => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(({ user }) => {
-        registerUser(user);
-      })
-      .catch((error) => {
-        throwLoginError(error.code);
-      })
-      .finally(() => setIsLoading(false));
-  }, []);
-
-  const loginWithAccount = useCallback((email: string, password: string) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .catch((error) => {
-        throwLoginError(error.code);
-      })
-      .finally(() => setIsLoading(false));
-  }, []);
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
