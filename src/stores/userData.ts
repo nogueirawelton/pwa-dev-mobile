@@ -7,30 +7,25 @@ interface UserStore {
   userData: User | null;
   currentWalletID: string | null;
 
-  loadUserData: (user: User) => void;
-  resetUserData: () => void;
-
+  setUserData: (user: User | null) => void;
   insertNewTransaction: (walletID: string, transaction: Transaction) => void;
 }
 
-export const useUserDataStore = create<UserStore>((set) => ({
+export const useStore = create<UserStore>((set) => ({
   userData: null,
   currentWalletID: null,
-  loadUserData: (user: User) =>
+  setUserData: (user) =>
     set((store) =>
       produce(store, (draft) => {
         draft.userData = user;
-        draft.currentWalletID = user.wallets[0].uid;
+        if (user) {
+          draft.currentWalletID = user.wallets[0].uid;
+        }
       }),
     ),
-  resetUserData: () =>
-    set((store) =>
-      produce(store, (draft) => {
-        draft.userData = null;
-      }),
-    ),
-  insertNewTransaction: (walletID: string, transaction: Transaction) =>
-    set((store) =>
+
+  insertNewTransaction: (walletID: string, transaction: Transaction) => {
+    return set((store) =>
       produce(store, (draft) => {
         const wallet = draft.userData?.wallets.find(
           (wallet) => (wallet.uid = walletID),
@@ -40,5 +35,6 @@ export const useUserDataStore = create<UserStore>((set) => ({
           wallet.transactions?.push(transaction);
         }
       }),
-    ),
+    );
+  },
 }));

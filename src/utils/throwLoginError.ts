@@ -8,7 +8,7 @@ const errorMap = {
   "auth/waiting-email-verification": "Email não verificado! ",
 };
 
-export default function throwLoginError(error: string) {
+export function throwLoginError(error: string) {
   toast.error(
     errorMap[error as keyof typeof errorMap] || "Ocorreu um erro desconhecido!",
   );

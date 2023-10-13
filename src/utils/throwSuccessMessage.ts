@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
 
-export default function throwSuccessMessage(message: string) {
+export function throwSuccessMessage(message: string) {
   toast.success(message);
 }

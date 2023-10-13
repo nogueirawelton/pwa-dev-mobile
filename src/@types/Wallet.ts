@@ -3,7 +3,7 @@ import { Transaction } from "./Transaction";
 export interface Wallet {
   uid: string;
   name: string;
-  createdAt: Date;
+  createdAt: string;
   balance: number;
-  transactions?: Transaction[];
+  transactions: Transaction[];
 }

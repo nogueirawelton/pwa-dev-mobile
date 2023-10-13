@@ -9,19 +9,19 @@ import {
 } from "phosphor-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { auth } from "../../../firebase";
-import { useUserDataStore } from "../../../stores/userData";
+import { useStore } from "../../../stores/userData";
 
 interface NavProps {
   closeMenu: () => void;
 }
 
 export function Nav({ closeMenu }: NavProps) {
-  const resetUserData = useUserDataStore((state) => state.resetUserData);
+  const setUserData = useStore((state) => state.setUserData);
   const { pathname } = useLocation();
 
   function handleLogout() {
     signOut(auth);
-    resetUserData();
+    setUserData(null);
   }
 
   return (

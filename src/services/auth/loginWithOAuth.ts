@@ -9,7 +9,7 @@ import { registerUserOnDatabase } from "./registerUser";
 export async function loginWithOAuth(provider: AuthProvider) {
   auth.useDeviceLanguage();
 
-  await signInWithPopup(auth, provider).then((loginData) => {
+  return await signInWithPopup(auth, provider).then((loginData) => {
     const { isNewUser } = getAdditionalUserInfo(loginData)!;
     const { user } = loginData;
 

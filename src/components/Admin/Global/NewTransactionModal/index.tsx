@@ -10,7 +10,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import createNewTransaction from "../../../../services/transactions/createNewTransaction";
 import { Transaction } from "../../../../@types/Transaction";
 import { TransactionTypes } from "../../../../@types/TransactionTypes";
-import { useUserDataStore } from "../../../../stores/userData";
+import { useStore } from "../../../../stores/userData";
+import { v4 } from "uuid";
+import { throwSuccessMessage } from "../../../../utils/throwSuccessMessage";
 
 interface NewTransactionModalProps {
   children: ReactNode;
@@ -19,11 +21,9 @@ interface NewTransactionModalProps {
 export function NewTransactionModal({ children }: NewTransactionModalProps) {
   const [open, setOpen] = useState(false);
 
-  const userID = useUserDataStore((state) => state.userData?.uid);
-  const walletID = useUserDataStore((state) => state.currentWalletID);
-  const insertNewTransaction = useUserDataStore(
-    (state) => state.insertNewTransaction,
-  );
+  const userID = useStore((state) => state.userData?.uid);
+  const currentWalletID = useStore((state) => state.currentWalletID);
+  const insertNewTransaction = useStore((state) => state.insertNewTransaction);
 
   // ---------- HOOK FORM CONFIG ---------- //
 
@@ -32,10 +32,12 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
     date: z.string().nonempty("Data não Selecionada"),
     amount: z
       .string({ required_error: "Valor não informado" })
-      .refine((amount) => Number(amount) >= 1, "Valor Inválido"),
+      .refine(
+        (amount) => Number(amount.replace(",", ".")) >= 1,
+        "Valor Inválido",
+      ),
     category: z.string({ required_error: "Categoria não Selecionada" }),
     type: z.string(),
-    description: z.string(),
   });
 
   const {
@@ -51,16 +53,24 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
       amount: "",
       category: undefined,
       type: TransactionTypes.DEPOSIT,
-      description: "",
     },
     resolver: zodResolver(formSchema),
   });
 
   const onSubmit: SubmitHandler<Transaction> = async (data) => {
-    const newTransactionID = await createNewTransaction(data, userID, walletID);
+    const transaction = {
+      ...data,
+      date: new Date(`${data.date}T00:00:00`).toString(),
+      uid: v4(),
+    };
 
-    insertNewTransaction(walletID!, { ...data, uid: newTransactionID });
+    if (currentWalletID) {
+      await createNewTransaction(transaction, userID, currentWalletID);
+
+      insertNewTransaction(currentWalletID, transaction);
+    }
     setOpen(false);
+    throwSuccessMessage("Transação adicionada com sucesso!");
   };
 
   return (
@@ -90,7 +100,7 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
                 {...register("name")}
                 placeholder="Nome"
                 type="text"
-                className="h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-4 placeholder:text-zinc-400"
+                className="autofill-light h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-4 placeholder:text-zinc-400"
               />
               {errors.name && (
                 <small className="text-red-500">{errors.name.message}</small>
@@ -101,7 +111,7 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
                 <input
                   {...register("date")}
                   type="date"
-                  className="px- h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-4 placeholder:text-zinc-400"
+                  className="autofill-light px- h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-4 placeholder:text-zinc-400"
                 />
                 {errors.date && (
                   <small className="text-red-500">{errors.date.message}</small>
@@ -118,7 +128,7 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
                       prefix="R$ "
                       decimalSeparator=","
                       onValueChange={(value) => onChange(value)}
-                      className="h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-4"
+                      className="autofill-light h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-4"
                     />
                   )}
                 />
@@ -147,11 +157,6 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
               render={({ field }) => <TransactionRadioTypes {...field} />}
             />
 
-            <textarea
-              {...register("description")}
-              placeholder="Descrição"
-              className="h-24 w-full resize-none rounded-md border border-zinc-200 bg-zinc-100 p-4 px-4"
-            ></textarea>
             <button className="h-12 rounded-md bg-sky-500 font-semibold text-zinc-100">
               Cadastrar
             </button>

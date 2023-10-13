@@ -1,17 +1,18 @@
 import { Plus } from "phosphor-react";
 import { NewTransactionModal } from "../components/Admin/Global/NewTransactionModal";
 import { TransactionsTable } from "../components/Admin/Global/TransactionsTable";
-import { useUserDataStore } from "../stores/userData";
+import { useStore } from "../stores/userData";
 
 export function Dashboard() {
-  const userData = useUserDataStore((state) => state.userData);
+  const transactions = useStore((state) => {
+    if (!state.currentWalletID) {
+      return [];
+    }
 
-  console.log(userData);
-  const recentTransactions =
-    useUserDataStore((state) => state.userData?.wallets[0].transactions)?.slice(
-      0,
-      10,
-    ) || null;
+    return state.userData?.wallets.find(
+      (wallet) => wallet.uid === state.currentWalletID,
+    )?.transactions;
+  });
 
   return (
     <section className="flex h-screen flex-col">
@@ -27,7 +28,7 @@ export function Dashboard() {
             </button>
           </NewTransactionModal>
         </div>
-        <TransactionsTable transactions={recentTransactions} />
+        {transactions && <TransactionsTable transactions={transactions} />}
       </div>
     </section>
   );

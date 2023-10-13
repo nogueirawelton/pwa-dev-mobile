@@ -1,7 +1,7 @@
 import { AuthProvider } from "firebase/auth";
 import { ReactNode } from "react";
 import { ComponentProps } from "react";
-import throwLoginError from "../../../utils/throwLoginError";
+import { throwLoginError } from "../../../utils/throwLoginError";
 import { useNavigate } from "react-router-dom";
 import { loginWithOAuth } from "../../../services/auth/loginWithOAuth";
 

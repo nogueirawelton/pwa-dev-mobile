@@ -3,25 +3,57 @@ import { Dashboard } from "../pages/Dashboard";
 import { Sidebar } from "../components/Admin/Sidebar";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import getDayPeriodMessage from "../utils/getDayPeriodMessage";
-import { List, X } from "phosphor-react";
+import { getDayPeriodMessage } from "../utils/getDayPeriodMessage";
+import { CircleNotch, List, X } from "phosphor-react";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { useState } from "react";
-import { useUserDataStore } from "../stores/userData";
+import { useStore } from "../stores/userData";
+import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { getUserRealtimeData } from "../services/auth/getUserRealtimeData";
 
 export function AdminLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { pathname } = useLocation();
-  const user = useUserDataStore((state) => state.userData);
+  const navigate = useNavigate();
+
+  const currentHour = new Date().getHours();
   const currentDate = format(new Date(), "EEEE, dd 'de' MMMM 'de' Y", {
     locale: ptBR,
   });
 
-  const currentHour = new Date().getHours();
+  const userData = useStore((state) => state.userData);
+  const setUserData = useStore((state) => state.setUserData);
 
   function closeMenu() {
     setIsMenuOpen(false);
+  }
+
+  useEffect(() => {
+    onAuthStateChanged(auth, async (signedUser) => {
+      if (!signedUser) {
+        navigate("/login");
+        return;
+      }
+
+      if (userData) {
+        return;
+      }
+
+      const userRealtimeData = await getUserRealtimeData(signedUser.uid);
+      setUserData(userRealtimeData);
+    });
+  }, []);
+
+  if (!userData) {
+    return (
+      <div className="grid h-screen w-screen place-items-center">
+        <CircleNotch className="h-10 w-10 animate-spin text-sky-500" />
+      </div>
+    );
   }
 
   return (
@@ -44,7 +76,7 @@ export function AdminLayout() {
             </small>
             <strong className="text-xl font-semibold text-zinc-900">
               {getDayPeriodMessage(currentHour)}
-              {user?.name ? `, ${user.name.split(" ")[0]}` : ""}
+              {userData?.name ? `, ${userData.name.split(" ")[0]}` : ""}
             </strong>
           </div>
           <Collapsible.Trigger asChild>

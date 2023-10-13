@@ -1,6 +1,6 @@
 import { User } from "../@types/User";
 
-export default function parseFirebaseUserData(userData: User) {
+export function parseFirebaseUserData(userData: User) {
   return {
     ...userData,
     wallets: userData.wallets

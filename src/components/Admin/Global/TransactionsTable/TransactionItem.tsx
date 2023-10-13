@@ -1,6 +1,7 @@
 import { ArrowDownRight, ArrowUpRight } from "phosphor-react";
 import { Transaction } from "../../../../@types/Transaction";
 import { TransactionTypes } from "../../../../@types/TransactionTypes";
+import { format } from "date-fns";
 
 interface TransactionProps {
   data: Transaction;
@@ -8,7 +9,7 @@ interface TransactionProps {
 }
 
 export function TransactionItem({
-  data: { name, type, date, description, category },
+  data: { name, type, date, amount, category },
   isOdd,
 }: TransactionProps) {
   return (
@@ -18,7 +19,7 @@ export function TransactionItem({
     >
       <td className="px-6 font-medium">{name}</td>
       <td
-        className="px-6 font-medium data-[type=DEPOSIT]:text-green-600 data-[type=WITHDRAW]:text-red-600"
+        className="px-6 font-medium data-[type=ENTRADA]:text-green-600 data-[type=SAÍDA]:text-red-600"
         data-type={type}
       >
         {type == TransactionTypes.DEPOSIT && (
@@ -38,14 +39,18 @@ export function TransactionItem({
           </span>
         )}
       </td>
-      <td>{date}</td>
-      <td
-        className="max-w-xs truncate whitespace-nowrap px-6"
-        title={description}
-      >
-        {description}
+      <td className="px-6">
+        {Number(amount.replace(",", ".")).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        })}
       </td>
-      <td className="px-6">{category}</td>
+      <td className="px-6">{format(new Date(date), "dd/MM/yyyy")}</td>
+      <td className="px-6 text-sm capitalize">
+        <span className="rounded-md border border-zinc-200 bg-sky-50 px-3 py-1 text-sky-500">
+          {category.toLowerCase()}
+        </span>
+      </td>
       <td className="px-6"></td>
     </tr>
   );

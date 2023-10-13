@@ -6,7 +6,7 @@ import { CircleNotch, Eye, EyeClosed } from "phosphor-react";
 import { useNavigate } from "react-router-dom";
 import { createAccount } from "../../../services/auth/registerUser";
 import { loginWithEmailAndPassword } from "../../../services/auth/loginWithEmailAndPassword";
-import throwLoginError from "../../../utils/throwLoginError";
+import { throwLoginError } from "../../../utils/throwLoginError";
 
 interface FormProps {
   isLogin: boolean;
@@ -54,6 +54,7 @@ export function Form({ isLogin }: FormProps) {
     if (isLogin) {
       try {
         await loginWithEmailAndPassword(email, password);
+        navigate("/admin");
       } catch ({ code }: any) {
         throwLoginError(code);
         setIsLoading(false);
@@ -84,7 +85,7 @@ export function Form({ isLogin }: FormProps) {
             {...register("email")}
             id="email"
             autoComplete="email"
-            className="h-12 w-full rounded-md border border-zinc-700 bg-transparent px-4 text-sm text-zinc-100 group-data-[filled=true]:border-zinc-100"
+            className="autofill-dark h-12 w-full rounded-md border border-zinc-700 bg-transparent px-4 text-sm text-zinc-100 group-data-[filled=true]:border-zinc-100"
             type="email"
           />
         </div>
@@ -105,7 +106,7 @@ export function Form({ isLogin }: FormProps) {
               {...register("password")}
               id="password"
               autoComplete="senha"
-              className="h-12 w-full bg-transparent px-4 text-sm text-zinc-100 outline-none"
+              className="autofill-dark h-12 w-full bg-transparent px-4 text-sm text-zinc-100 outline-none"
               type={showPassword ? "text" : "password"}
             />
             <button

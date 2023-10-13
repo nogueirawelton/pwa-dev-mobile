@@ -2,9 +2,9 @@ import { Wallet } from "./Wallet";
 
 export interface User {
   uid: string;
-  createdAt: Date;
+  createdAt: string;
   email: string;
-  name?: string;
-  profileImage?: string;
+  name: string;
+  profileImage: string;
   wallets: Wallet[];
 }

@@ -3,10 +3,12 @@ import homeIllustration from "/img/home-illustration.svg";
 import { motion } from "framer-motion";
 import { User } from "phosphor-react";
 import { Logo } from "../components/Logo";
+import { useStore } from "../stores/userData";
 
 export function HomeLayout() {
   const { pathname } = useLocation();
   const isHome = pathname == "/";
+  const userData = useStore((state) => state.userData);
 
   return (
     <>

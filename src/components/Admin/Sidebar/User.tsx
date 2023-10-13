@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { useUserDataStore } from "../../../stores/userData";
+import { useStore } from "../../../stores/userData";
 
 export function User() {
-  const user = useUserDataStore((state) => state.userData);
+  const user = useStore((state) => state.userData);
 
   if (!user) return null;
 

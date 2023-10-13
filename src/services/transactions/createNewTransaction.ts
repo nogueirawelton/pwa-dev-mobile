@@ -1,7 +1,6 @@
 import { ref, set } from "firebase/database";
 import { Transaction } from "../../@types/Transaction";
 import { db } from "../../firebase";
-import { v4 } from "uuid";
 
 export default async function createNewTransaction(
   transaction: Transaction,
@@ -12,18 +11,11 @@ export default async function createNewTransaction(
     return;
   }
 
-  const newTransactionID = v4();
-
   await set(
     ref(
       db,
-      `/users/${userID}/wallets/${walletID}/transactions/${newTransactionID}`,
+      `/users/${userID}/wallets/${walletID}/transactions/${transaction.uid}`,
     ),
-    {
-      uid: newTransactionID,
-      ...transaction,
-    },
+    transaction,
   );
-
-  return newTransactionID;
 }
