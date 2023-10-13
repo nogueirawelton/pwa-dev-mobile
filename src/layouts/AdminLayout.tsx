@@ -11,7 +11,7 @@ import { useStore } from "../stores/userData";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { User, onAuthStateChanged } from "firebase/auth";
 import { getUserRealtimeData } from "../services/auth/getUserRealtimeData";
 
 export function AdminLayout() {
@@ -33,6 +33,13 @@ export function AdminLayout() {
   }
 
   useEffect(() => {
+    let debounceTimeout: ReturnType<typeof setTimeout> | null;
+
+    async function handleLogin(signedUser: User) {
+      const userRealtimeData = await getUserRealtimeData(signedUser.uid);
+      setUserData(userRealtimeData);
+    }
+
     onAuthStateChanged(auth, async (signedUser) => {
       if (!signedUser) {
         navigate("/login");
@@ -43,8 +50,13 @@ export function AdminLayout() {
         return;
       }
 
-      const userRealtimeData = await getUserRealtimeData(signedUser.uid);
-      setUserData(userRealtimeData);
+      if (debounceTimeout) clearTimeout(debounceTimeout);
+
+      debounceTimeout = setTimeout(() => {
+        debounceTimeout = null;
+
+        handleLogin(signedUser);
+      }, 300);
     });
   }, []);
 

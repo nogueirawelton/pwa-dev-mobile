@@ -17,14 +17,14 @@ export const TransactionRadioTypes = forwardRef<
     >
       <RadioGroup.Item
         value={TransactionTypes.DEPOSIT}
-        className="boder-zinc-200 group flex h-12 w-full items-center justify-center gap-2 rounded-md border bg-zinc-100 data-[state=checked]:border-sky-500 data-[state=checked]:bg-sky-500 data-[state=checked]:text-zinc-100"
+        className="boder-zinc-200 group flex h-12 w-full items-center justify-center gap-2 rounded-md border bg-zinc-100 data-[state=checked]:border-green-500 data-[state=checked]:bg-green-500 data-[state=checked]:text-zinc-100"
       >
         <ArrowCircleUp className="h-6 w-6 text-green-600 group-data-[state=checked]:text-zinc-100" />
         Entrada
       </RadioGroup.Item>
       <RadioGroup.Item
         value={TransactionTypes.WITHDRAW}
-        className="boder-zinc-200 group flex h-12 w-full items-center justify-center gap-2 rounded-md border bg-zinc-100 data-[state=checked]:border-sky-500 data-[state=checked]:bg-sky-500 data-[state=checked]:text-zinc-100"
+        className="boder-zinc-200 group flex h-12 w-full items-center justify-center gap-2 rounded-md border bg-zinc-100 data-[state=checked]:border-red-500 data-[state=checked]:bg-red-500 data-[state=checked]:text-zinc-100"
       >
         <ArrowCircleDown className="h-6 w-6 text-red-600 group-data-[state=checked]:text-zinc-100" />
         Saída
