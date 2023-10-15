@@ -13,6 +13,8 @@ import { TransactionTypes } from "../../../../@types/TransactionTypes";
 import { useStore } from "../../../../stores/userData";
 import { v4 } from "uuid";
 import { throwSuccessMessage } from "../../../../utils/throwSuccessMessage";
+import { isAfter } from "date-fns";
+import { throwErrorMessage } from "../../../../utils/throwErrorMessage";
 
 interface NewTransactionModalProps {
   children: ReactNode;
@@ -21,15 +23,19 @@ interface NewTransactionModalProps {
 export function NewTransactionModal({ children }: NewTransactionModalProps) {
   const [open, setOpen] = useState(false);
 
-  const userID = useStore((state) => state.userData?.uid);
-  const currentWalletID = useStore((state) => state.currentWalletID);
+  const { currentWalletID, userID } = useStore((state) => {
+    return {
+      currentWalletID: state.currentWalletID,
+      userID: state.userData?.uid,
+    };
+  });
   const insertNewTransaction = useStore((state) => state.insertNewTransaction);
 
   // ---------- HOOK FORM CONFIG ---------- //
 
   const formSchema = z.object({
     name: z.string().min(1, "Nome Inválido"),
-    date: z.string().nonempty("Data não Selecionada"),
+    transactionDate: z.string().nonempty("Data não Selecionada"),
     amount: z
       .string({ required_error: "Valor não informado" })
       .refine(
@@ -49,7 +55,7 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
   } = useForm<Transaction>({
     defaultValues: {
       name: "",
-      date: new Date().toLocaleDateString("en-CA"),
+      transactionDate: new Date().toLocaleDateString("en-CA"),
       amount: "",
       category: undefined,
       type: TransactionTypes.DEPOSIT,
@@ -58,19 +64,30 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
   });
 
   const onSubmit: SubmitHandler<Transaction> = async (data) => {
-    const transaction = {
+    const parsedTransactionDate = new Date(`${data.transactionDate}T00:00:00`);
+    const currentDate = new Date();
+
+    const newTransaction = {
       ...data,
-      date: new Date(`${data.date}T00:00:00`).toString(),
       uid: v4(),
+      transactionDate: parsedTransactionDate.toString(),
+      createdAt: currentDate.toString(),
+      deletedAt: "",
+      isSchedule: isAfter(parsedTransactionDate, currentDate),
     };
 
-    if (currentWalletID) {
-      await createNewTransaction(transaction, userID, currentWalletID);
+    if (currentWalletID && userID) {
+      try {
+        await createNewTransaction(newTransaction, userID, currentWalletID);
 
-      insertNewTransaction(currentWalletID, transaction);
+        insertNewTransaction(currentWalletID, newTransaction);
+
+        setOpen(false);
+        throwSuccessMessage("Transação adicionada com sucesso!");
+      } catch (err) {
+        throwErrorMessage("Erro ao adicionar transação!");
+      }
     }
-    setOpen(false);
-    throwSuccessMessage("Transação adicionada com sucesso!");
   };
 
   return (
@@ -109,12 +126,14 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <input
-                  {...register("date")}
+                  {...register("transactionDate")}
                   type="date"
                   className="autofill-light px- h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-4 placeholder:text-zinc-400"
                 />
-                {errors.date && (
-                  <small className="text-red-500">{errors.date.message}</small>
+                {errors.transactionDate && (
+                  <small className="text-red-500">
+                    {errors.transactionDate.message}
+                  </small>
                 )}
               </div>
               <div>

@@ -1,7 +1,15 @@
-import { ArrowDownRight, ArrowUpRight } from "phosphor-react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  DotsThreeVertical,
+} from "phosphor-react";
 import { Transaction } from "../../../../@types/Transaction";
 import { TransactionTypes } from "../../../../@types/TransactionTypes";
 import { format } from "date-fns";
+import { useStore } from "../../../../stores/userData";
+import { deleteTransactionById } from "../../../../services/transactions/deleteTransactionById";
+import { throwErrorMessage } from "../../../../utils/throwErrorMessage";
+import { throwSuccessMessage } from "../../../../utils/throwSuccessMessage";
 
 interface TransactionProps {
   data: Transaction;
@@ -9,9 +17,31 @@ interface TransactionProps {
 }
 
 export function TransactionItem({
-  data: { name, type, date, amount, category },
+  data: { uid, name, type, transactionDate, amount, category },
   isOdd,
 }: TransactionProps) {
+  const { currentWalletID, userID } = useStore((state) => {
+    return {
+      currentWalletID: state.currentWalletID,
+      userID: state.userData?.uid,
+    };
+  });
+
+  const deleteTransaction = useStore((state) => state.deleteTransaction);
+
+  async function removeTransaction() {
+    if (currentWalletID && userID) {
+      try {
+        await deleteTransactionById(userID, currentWalletID, uid);
+
+        deleteTransaction(currentWalletID, uid);
+        throwSuccessMessage("Transação excluída com sucesso!");
+      } catch (err) {
+        throwErrorMessage("Erro ao deletar transação!");
+      }
+    }
+  }
+
   return (
     <tr
       className="h-20 whitespace-nowrap rounded-md text-zinc-700  ring-zinc-50 data-[odd=false]:bg-zinc-50 data-[odd=true]:ring-1"
@@ -45,13 +75,22 @@ export function TransactionItem({
           currency: "BRL",
         })}
       </td>
-      <td className="px-6">{format(new Date(date), "dd/MM/yyyy")}</td>
+      <td className="px-6">
+        {format(new Date(transactionDate), "dd/MM/yyyy")}
+      </td>
       <td className="px-6 text-sm capitalize">
         <span className="rounded-md border border-zinc-200 bg-sky-50 px-3 py-1 text-sky-500">
           {category.toLowerCase()}
         </span>
       </td>
-      <td className="px-6"></td>
+      <td className="px-6">
+        <button
+          className="grid h-8 w-8 place-items-center rounded-md border-zinc-100 text-xl hover:border hover:bg-zinc-100"
+          onClick={removeTransaction}
+        >
+          <DotsThreeVertical />
+        </button>
+      </td>
     </tr>
   );
 }

@@ -6,6 +6,8 @@ export interface Transaction {
   name: string;
   type: TransactionTypes;
   category: Categories;
-  date: string;
+  transactionDate: string;
+  createdAt: string;
+  deletedAt: string;
   amount: string;
 }
