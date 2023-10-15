@@ -2,16 +2,32 @@ import { Plus } from "phosphor-react";
 import { NewTransactionModal } from "../components/Admin/Global/NewTransactionModal";
 import { TransactionsTable } from "../components/Admin/Global/TransactionsTable";
 import { useStore } from "../stores/userData";
+import { differenceInMilliseconds } from "date-fns";
 
 export function Dashboard() {
-  const transactions = useStore((state) => {
+  const lastTransactions = useStore((state) => {
     if (!state.currentWalletID) {
       return [];
     }
 
-    return state.userData?.wallets.find(
+    const allCurrentWalletTransactions = state.userData?.wallets.find(
       (wallet) => wallet.uid === state.currentWalletID,
     )?.transactions;
+
+    const filteredTransactions = allCurrentWalletTransactions?.filter(
+      (transaction) => !transaction.deletedAt,
+    );
+
+    const sortedTransactionsByCreationTime = filteredTransactions?.sort(
+      (a, b) => {
+        return differenceInMilliseconds(
+          new Date(b.createdAt),
+          new Date(a.createdAt),
+        );
+      },
+    );
+
+    return sortedTransactionsByCreationTime;
   });
 
   return (
@@ -27,12 +43,15 @@ export function Dashboard() {
           </button>
         </NewTransactionModal>
       </div>
-      {transactions && (
-        <TransactionsTable
-          transactions={transactions.filter(
-            (transaction) => !transaction.deletedAt,
-          )}
-        />
+      {!!lastTransactions?.length ? (
+        <TransactionsTable transactions={lastTransactions} />
+      ) : (
+        <div className="flex flex-1 flex-col items-center justify-center text-zinc-500">
+          <p className="text-center text-sm">
+            Nenhuma transação adicionada, clique em <i>Nova Transação</i> para
+            criar a primeira!
+          </p>
+        </div>
       )}
     </section>
   );

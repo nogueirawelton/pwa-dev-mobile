@@ -6,13 +6,14 @@ import { ptBR } from "date-fns/locale";
 import { getDayPeriodMessage } from "../utils/getDayPeriodMessage";
 import { CircleNotch, List, X } from "phosphor-react";
 import * as Collapsible from "@radix-ui/react-collapsible";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useStore } from "../stores/userData";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { getUserRealtimeData } from "../services/auth/getUserRealtimeData";
+import { motion } from "framer-motion";
 
 export function AdminLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,6 +28,8 @@ export function AdminLayout() {
 
   const userData = useStore((state) => state.userData);
   const setUserData = useStore((state) => state.setUserData);
+
+  const MotionContent = useMemo(() => motion(Collapsible.Content), []);
 
   function closeMenu() {
     setIsMenuOpen(false);
@@ -74,12 +77,22 @@ export function AdminLayout() {
       open={isMenuOpen}
       onOpenChange={setIsMenuOpen}
     >
-      <Collapsible.Content
+      <MotionContent
+        className="z-50 data-[state=closed]:hidden lg:data-[state=closed]:block lg:data-[state=closed]:!translate-x-0 lg:data-[state=closed]:!opacity-100"
         forceMount
-        className="z-50 data-[state=closed]:hidden data-[state=open]:animate-float-right lg:data-[state=closed]:block"
+        initial="closed"
+        animate={isMenuOpen ? "open" : "closed"}
+        transition={{
+          duration: 0.6,
+          ease: "backInOut",
+        }}
+        variants={{
+          closed: { opacity: 0, x: -320 },
+          open: { opacity: 1, x: 0 },
+        }}
       >
         <Sidebar closeMenu={closeMenu} />
-      </Collapsible.Content>
+      </MotionContent>
       <main className="flex w-full flex-col space-y-4 divide-y divide-zinc-200 overflow-hidden bg-white px-6 py-4 text-zinc-900 lg:rounded-bl-lg lg:rounded-tl-lg">
         <header className="flex items-center justify-between">
           <div className="flex flex-col">

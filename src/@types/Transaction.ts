@@ -10,4 +10,5 @@ export interface Transaction {
   createdAt: string;
   deletedAt: string;
   amount: string;
+  isSchedule: boolean;
 }

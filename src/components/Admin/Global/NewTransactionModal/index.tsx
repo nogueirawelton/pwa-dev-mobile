@@ -2,7 +2,7 @@ import { X } from "phosphor-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
-import { ReactNode, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { TransactionCategorySelect } from "./TransactionCategorySelect";
 import { TransactionRadioTypes } from "./TransactionRadioTypes";
@@ -15,6 +15,7 @@ import { v4 } from "uuid";
 import { throwSuccessMessage } from "../../../../utils/throwSuccessMessage";
 import { isAfter } from "date-fns";
 import { throwErrorMessage } from "../../../../utils/throwErrorMessage";
+import { motion } from "framer-motion";
 
 interface NewTransactionModalProps {
   children: ReactNode;
@@ -29,6 +30,7 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
       userID: state.userData?.uid,
     };
   });
+
   const insertNewTransaction = useStore((state) => state.insertNewTransaction);
 
   // ---------- HOOK FORM CONFIG ---------- //
@@ -90,18 +92,34 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
     }
   };
 
+  const MotionContent = useMemo(() => motion(Dialog.Content), []);
+
   return (
     <Dialog.Root
       open={open}
       onOpenChange={(value) => {
-        reset();
-        setOpen(value);
+        if (value !== open) {
+          setOpen(value);
+          reset();
+        }
       }}
     >
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-[rgba(0,0,0,0.6)]" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-[95%] max-w-xl origin-center rounded-md bg-zinc-50 p-6 shadow-sm data-[state=open]:animate-zoom-in lg:p-8">
+        <MotionContent
+          className="fixed left-1/2 top-1/2 z-50 w-[95%] max-w-xl rounded-md bg-zinc-50 p-6 shadow-sm lg:p-8"
+          initial="closed"
+          animate="open"
+          variants={{
+            closed: { opacity: 0, scale: 0.75, x: "-50%", y: "-50%" },
+            open: { opacity: 1, scale: 1, x: "-50%", y: "-50%" },
+          }}
+          transition={{
+            duration: 0.6,
+            ease: "backInOut",
+          }}
+        >
           <Dialog.Title className="mb-4 text-2xl font-bold text-zinc-900">
             Cadastrar Transação
           </Dialog.Title>
@@ -180,7 +198,7 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
               Cadastrar
             </button>
           </form>
-        </Dialog.Content>
+        </MotionContent>
       </Dialog.Portal>
     </Dialog.Root>
   );

@@ -30,7 +30,7 @@ export const TransactionCategorySelect = forwardRef<
             <Select.Item
               value={category}
               key={category}
-              className="flex h-8 items-center rounded-md px-1 text-zinc-800 outline-none hover:bg-sky-500 hover:text-zinc-100"
+              className="flex h-8 items-center rounded-md px-1 text-zinc-800 hover:bg-sky-500 hover:text-zinc-100 hover:outline-none"
             >
               <Select.ItemText asChild>
                 <span className="capitalize">

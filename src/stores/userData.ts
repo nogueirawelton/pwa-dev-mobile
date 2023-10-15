@@ -34,7 +34,7 @@ export const useStore = create<UserStore>((set) => ({
         );
 
         if (wallet) {
-          wallet.transactions?.push(transaction);
+          wallet.transactions?.unshift(transaction);
         }
       }),
     );

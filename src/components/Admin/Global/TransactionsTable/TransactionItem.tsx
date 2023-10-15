@@ -1,8 +1,4 @@
-import {
-  ArrowDownRight,
-  ArrowUpRight,
-  DotsThreeVertical,
-} from "phosphor-react";
+import { ArrowDownRight, ArrowUpRight, Trash } from "phosphor-react";
 import { Transaction } from "../../../../@types/Transaction";
 import { TransactionTypes } from "../../../../@types/TransactionTypes";
 import { format } from "date-fns";
@@ -10,6 +6,7 @@ import { useStore } from "../../../../stores/userData";
 import { deleteTransactionById } from "../../../../services/transactions/deleteTransactionById";
 import { throwErrorMessage } from "../../../../utils/throwErrorMessage";
 import { throwSuccessMessage } from "../../../../utils/throwSuccessMessage";
+import { motion } from "framer-motion";
 
 interface TransactionProps {
   data: Transaction;
@@ -43,9 +40,18 @@ export function TransactionItem({
   }
 
   return (
-    <tr
-      className="h-20 whitespace-nowrap rounded-md text-zinc-700  ring-zinc-50 data-[odd=false]:bg-zinc-50 data-[odd=true]:ring-1"
+    <motion.tr
+      className="h-20 whitespace-nowrap rounded-md text-zinc-700  ring-zinc-50 data-[odd=false]:bg-zinc-50 data-[odd=motion.true]:ring-1"
       data-odd={isOdd}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={{
+        hidden: { opacity: 0, y: -50 },
+        visible: { opacity: 1, y: 0 },
+        exit: { opacity: 0, x: 25 },
+      }}
+      layout
     >
       <td className="px-6 font-medium">{name}</td>
       <td
@@ -85,12 +91,12 @@ export function TransactionItem({
       </td>
       <td className="px-6">
         <button
-          className="grid h-8 w-8 place-items-center rounded-md border-zinc-100 text-xl hover:border hover:bg-zinc-100"
+          className="grid h-8 w-8 place-items-center rounded-md border-red-100 text-xl hover:border hover:bg-red-50"
           onClick={removeTransaction}
         >
-          <DotsThreeVertical />
+          <Trash className="text-red-500" />
         </button>
       </td>
-    </tr>
+    </motion.tr>
   );
 }
