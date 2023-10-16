@@ -6,9 +6,9 @@ interface CredentialData {
 }
 
 export async function registerCredential(user: User) {
-  // if (!window.matchMedia("(display-mode: standalone)").matches) {
-  //   return;
-  // }
+   if (!window.matchMedia("(display-mode: standalone)").matches && navigator.onLine) {
+     return;
+  }
 
   return await insertOnIndexedDB(user);
 }
