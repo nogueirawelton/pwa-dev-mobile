@@ -47,7 +47,7 @@ export function Auth() {
       }
     }
 
-     if (!window.matchMedia("(display-mode: standalone)").matches || navigator.onLine) {
+     if (!window.matchMedia("(display-mode: standalone)").matches) {
        return;
      }
 
