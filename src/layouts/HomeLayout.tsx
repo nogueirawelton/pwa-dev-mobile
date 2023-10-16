@@ -16,11 +16,7 @@ export function HomeLayout() {
   useEffect(() => {
     if (!isHome) {
       if (!userData) {
-        throwErrorMessage("Nenhum usuário logado");
-      }
-
-      if (!navigator.onLine) {
-        throwErrorMessage("Sem rede");
+        throwErrorMessage("Fique online para acessar sua conta!");
       }
     }
   }, []);

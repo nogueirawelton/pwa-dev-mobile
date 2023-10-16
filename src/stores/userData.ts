@@ -2,7 +2,7 @@ import { produce } from "immer";
 import { create } from "zustand";
 import { User } from "../@types/User";
 import { Transaction } from "../@types/Transaction";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 interface UserStore {
   userData: User | null;
   currentWalletID: string | null;
@@ -61,7 +61,7 @@ export const useStore = create<UserStore>()(
     },
     {
       name: "kpz-finances-persist", // Nome da chave no storage
-      partialize: (state) => state.userData,
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );
