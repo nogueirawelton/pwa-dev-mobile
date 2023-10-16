@@ -14,7 +14,7 @@ export default defineConfig({
         background_color: "#18181b",
         display: "standalone",
         scope: "/",
-        start_url: "/",
+        start_url: "/login",
         name: "KpzFinances",
         short_name: "KpzFinances",
         description: "A Finance App",
