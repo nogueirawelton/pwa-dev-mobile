@@ -79,11 +79,10 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
 
     if (currentWalletID && userID) {
       try {
-        await createNewTransaction(newTransaction, userID, currentWalletID);
-
         insertNewTransaction(currentWalletID, newTransaction);
-
         setOpen(false);
+        
+        await createNewTransaction(newTransaction, userID, currentWalletID);
       } catch (err) {
         throwErrorMessage("Erro ao adicionar transação!");
       }
