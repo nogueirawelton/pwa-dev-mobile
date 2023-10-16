@@ -15,7 +15,7 @@ export function HomeLayout() {
 
   useEffect(() => {
     if (!isHome) {
-      if (!userData) {
+      if (!navigator.onLine && !userData) {
         throwErrorMessage("Fique online para acessar sua conta!");
       }
     }
