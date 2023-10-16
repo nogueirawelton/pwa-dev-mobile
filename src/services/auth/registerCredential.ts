@@ -37,7 +37,7 @@ async function insertOnIndexedDB(user: User) {
     const credential = (await navigator.credentials.create({
       publicKey: {
         challenge: new Uint8Array(32),
-        rp: { id: "localhost", name: "KpzFinances" },
+        rp: { id: "kpz-finances.vercel.app", name: "KpzFinances" },
         user: {
           id: new Uint8Array(32),
           name: user.email || "anonymous@email.com",
