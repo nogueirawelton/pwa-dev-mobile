@@ -23,8 +23,9 @@ export function OAuthButton({
       const user = await loginWithOAuth(provider);
       await registerCredential(user);
       navigate("/admin");
-    } catch ({ code }: any) {
-      throwLoginError(code);
+    } catch (error: any) {
+      console.log(error);
+      throwLoginError(error.code);
     }
   }
 

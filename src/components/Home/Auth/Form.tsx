@@ -57,8 +57,9 @@ export function Form({ isLogin }: FormProps) {
         const user = await loginWithEmailAndPassword(email, password);
         await registerCredential(user);
         navigate("/admin");
-      } catch ({ code }: any) {
-        throwLoginError(code);
+      } catch (error: any) {
+        throwLoginError(error.code);
+        console.log(error);
         setIsLoading(false);
       }
       return;
@@ -68,8 +69,9 @@ export function Form({ isLogin }: FormProps) {
       const user = await createAccount(email, password);
       await registerCredential(user);
       navigate("/admin");
-    } catch ({ code }: any) {
-      throwLoginError(code);
+    } catch (error: any) {
+      throwLoginError(error.code);
+      console.log(error);
       setIsLoading(false);
     }
   };
