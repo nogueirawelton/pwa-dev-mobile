@@ -36,29 +36,11 @@ export function AdminLayout() {
   }
 
   useEffect(() => {
-    if (!navigator.onLine) {
-      navigator.credentials
-        .get({
-          publicKey: {
-            challenge: new Uint8Array(32),
-            allowCredentials: [], // Deixe vazio para qualquer credencial
-            timeout: 60000,
-            userVerification: "required",
-          },
-        })
-        .then((assertion) => {
-          if (!assertion) {
-            navigate("/login");
-          }
-        });
-
-      return;
-    }
-
     let debounceTimeout: ReturnType<typeof setTimeout> | null;
 
     async function handleLogin(signedUser: User) {
       const userRealtimeData = await getUserRealtimeData(signedUser.uid);
+
       setUserData(userRealtimeData);
     }
 

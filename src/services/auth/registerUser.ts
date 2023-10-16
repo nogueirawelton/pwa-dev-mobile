@@ -27,6 +27,7 @@ export async function registerUserOnDatabase(user: User) {
 
 export async function createAccount(email: string, password: string) {
   const { user } = await createUserWithEmailAndPassword(auth, email, password);
+  await registerUserOnDatabase(user);
 
-  return await registerUserOnDatabase(user);
+  return user;
 }

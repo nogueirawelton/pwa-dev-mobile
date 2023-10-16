@@ -15,6 +15,7 @@ export function User() {
         <img
           className="h-10 w-10 shrink-0 rounded-full"
           src={user.profileImage}
+          referrerPolicy="no-referrer"
           alt=""
         />
       ) : (

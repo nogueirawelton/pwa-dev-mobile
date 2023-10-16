@@ -4,6 +4,7 @@ import { ComponentProps } from "react";
 import { throwLoginError } from "../../../utils/throwLoginError";
 import { useNavigate } from "react-router-dom";
 import { loginWithOAuth } from "../../../services/auth/loginWithOAuth";
+import { registerCredential } from "../../../services/auth/registerCredential";
 
 interface OAuthButtonProps extends ComponentProps<"button"> {
   children: ReactNode;
@@ -19,7 +20,8 @@ export function OAuthButton({
 
   async function handleLogin() {
     try {
-      await loginWithOAuth(provider);
+      const user = await loginWithOAuth(provider);
+      await registerCredential(user);
       navigate("/admin");
     } catch ({ code }: any) {
       throwLoginError(code);

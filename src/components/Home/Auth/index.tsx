@@ -6,9 +6,53 @@ import { Form } from "./Form";
 import { AuxText } from "./AuxText";
 import { OptionDivider } from "./OptionDivider";
 import { OAuthButton } from "./OAuthButton";
+import { useEffect } from "react";
+import { useStore } from "../../../stores/userData";
+import { getExistentCredential } from "../../../services/auth/registerCredential";
+import { useNavigate } from "react-router-dom";
 
 export function Auth() {
   const isLogin = location.href.includes("login");
+
+  const navigate = useNavigate();
+
+  const userData = useStore((state) => state.userData);
+  const setUserData = useStore((state) => state.setUserData);
+
+  useEffect(() => {
+    async function mount() {
+      if (userData) {
+        const credentialData = await getExistentCredential(userData.uid);
+
+        navigator.credentials
+          .get({
+            publicKey: {
+              allowCredentials: [
+                {
+                  id: credentialData.credential,
+                  type: "public-key",
+                  transports: ["internal"],
+                },
+              ],
+              challenge: new Uint8Array(32),
+              timeout: 60000,
+            },
+          })
+          .then(() => {
+            navigate("/admin");
+          })
+          .catch(() => {
+            setUserData(null);
+          });
+      }
+    }
+
+    if (!window.matchMedia("(display-mode: standalone)").matches) {
+      return;
+    }
+
+    mount();
+  }, []);
 
   return (
     <div className="flex flex-col items-center">

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { createAccount } from "../../../services/auth/registerUser";
 import { loginWithEmailAndPassword } from "../../../services/auth/loginWithEmailAndPassword";
 import { throwLoginError } from "../../../utils/throwLoginError";
+import { registerCredential } from "../../../services/auth/registerCredential";
 
 interface FormProps {
   isLogin: boolean;
@@ -53,7 +54,8 @@ export function Form({ isLogin }: FormProps) {
 
     if (isLogin) {
       try {
-        await loginWithEmailAndPassword(email, password);
+        const user = await loginWithEmailAndPassword(email, password);
+        await registerCredential(user);
         navigate("/admin");
       } catch ({ code }: any) {
         throwLoginError(code);
@@ -63,7 +65,8 @@ export function Form({ isLogin }: FormProps) {
     }
 
     try {
-      await createAccount(email, password);
+      const user = await createAccount(email, password);
+      await registerCredential(user);
       navigate("/admin");
     } catch ({ code }: any) {
       throwLoginError(code);

@@ -5,5 +5,5 @@ export async function loginWithEmailAndPassword(
   email: string,
   password: string,
 ) {
-  return await signInWithEmailAndPassword(auth, email, password);
+  return (await signInWithEmailAndPassword(auth, email, password)).user;
 }
