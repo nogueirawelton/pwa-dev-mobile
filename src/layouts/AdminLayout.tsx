@@ -36,6 +36,25 @@ export function AdminLayout() {
   }
 
   useEffect(() => {
+    if (!navigator.onLine) {
+      navigator.credentials
+        .get({
+          publicKey: {
+            challenge: new Uint8Array(32),
+            allowCredentials: [], // Deixe vazio para qualquer credencial
+            timeout: 60000,
+            userVerification: "required",
+          },
+        })
+        .then((assertion) => {
+          if (!assertion) {
+            navigate("/login");
+          }
+        });
+
+      return;
+    }
+
     let debounceTimeout: ReturnType<typeof setTimeout> | null;
 
     async function handleLogin(signedUser: User) {
@@ -93,7 +112,7 @@ export function AdminLayout() {
       >
         <Sidebar closeMenu={closeMenu} />
       </MotionContent>
-      <main className="flex w-full flex-col space-y-4 divide-y divide-zinc-200 overflow-hidden bg-white px-4 lg:px-6 py-4 text-zinc-900 lg:rounded-bl-lg lg:rounded-tl-lg">
+      <main className="flex w-full flex-col space-y-4 divide-y divide-zinc-200 overflow-hidden bg-white px-4 py-4 text-zinc-900 lg:rounded-bl-lg lg:rounded-tl-lg lg:px-6">
         <header className="flex items-center justify-between">
           <div className="flex flex-col">
             <small className="text-sm font-semibold capitalize text-zinc-600">
