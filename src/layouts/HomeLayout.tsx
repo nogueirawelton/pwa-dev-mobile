@@ -15,8 +15,12 @@ export function HomeLayout() {
 
   useEffect(() => {
     if (!isHome) {
-      if (!navigator.onLine && !userData) {
-        throwErrorMessage("Fique online para acessar sua conta!");
+      if (!userData) {
+        throwErrorMessage("Nenhum usuário logado");
+      }
+
+      if (!navigator.onLine) {
+        throwErrorMessage("Sem rede");
       }
     }
   }, []);
