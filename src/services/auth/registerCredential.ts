@@ -6,7 +6,7 @@ interface CredentialData {
 }
 
 export async function registerCredential(user: User) {
-   if (!window.matchMedia("(display-mode: standalone)").matches || navigator.onLine) {
+   if (!window.matchMedia("(display-mode: standalone)").matches) {
      return;
   }
 
