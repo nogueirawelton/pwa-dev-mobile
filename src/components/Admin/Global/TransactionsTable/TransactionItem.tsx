@@ -5,7 +5,6 @@ import { format } from "date-fns";
 import { useStore } from "../../../../stores/userData";
 import { deleteTransactionById } from "../../../../services/transactions/deleteTransactionById";
 import { throwErrorMessage } from "../../../../utils/throwErrorMessage";
-import { throwSuccessMessage } from "../../../../utils/throwSuccessMessage";
 import { motion } from "framer-motion";
 
 interface TransactionProps {
@@ -32,7 +31,6 @@ export function TransactionItem({
         await deleteTransactionById(userID, currentWalletID, uid);
 
         deleteTransaction(currentWalletID, uid);
-        throwSuccessMessage("Transação excluída com sucesso!");
       } catch (err) {
         throwErrorMessage("Erro ao deletar transação!");
       }

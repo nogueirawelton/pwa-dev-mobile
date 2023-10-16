@@ -12,7 +12,6 @@ import { Transaction } from "../../../../@types/Transaction";
 import { TransactionTypes } from "../../../../@types/TransactionTypes";
 import { useStore } from "../../../../stores/userData";
 import { v4 } from "uuid";
-import { throwSuccessMessage } from "../../../../utils/throwSuccessMessage";
 import { isAfter } from "date-fns";
 import { throwErrorMessage } from "../../../../utils/throwErrorMessage";
 import { motion } from "framer-motion";
@@ -85,7 +84,6 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
         insertNewTransaction(currentWalletID, newTransaction);
 
         setOpen(false);
-        throwSuccessMessage("Transação adicionada com sucesso!");
       } catch (err) {
         throwErrorMessage("Erro ao adicionar transação!");
       }
