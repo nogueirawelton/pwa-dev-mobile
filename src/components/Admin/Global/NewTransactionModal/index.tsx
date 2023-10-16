@@ -108,7 +108,7 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-[rgba(0,0,0,0.6)]" />
         <MotionContent
-          className="fixed left-1/2 top-1/2 z-50 w-[95%] max-w-xl rounded-md bg-zinc-50 p-6 shadow-sm lg:p-8"
+          className="fixed left-1/2 top-1/2 z-50 w-[95%] max-w-xl rounded-md bg-zinc-50 p-4 shadow-sm md:p-6 lg:p-8"
           initial="closed"
           animate="open"
           variants={{
@@ -135,7 +135,7 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
                 {...register("name")}
                 placeholder="Nome"
                 type="text"
-                className="autofill-light h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-4 placeholder:text-zinc-400"
+                className="autofill-light h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-2 placeholder:text-zinc-400 sm:px-4"
               />
               {errors.name && (
                 <small className="text-red-500">{errors.name.message}</small>
@@ -145,8 +145,9 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
               <div>
                 <input
                   {...register("transactionDate")}
+                  placeholder="Data"
                   type="date"
-                  className="autofill-light px- h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-4 placeholder:text-zinc-400"
+                  className="autofill-light h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-2 placeholder:text-zinc-400 sm:px-4"
                 />
                 {errors.transactionDate && (
                   <small className="text-red-500">
@@ -165,7 +166,7 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
                       prefix="R$ "
                       decimalSeparator=","
                       onValueChange={(value) => onChange(value)}
-                      className="autofill-light h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-4"
+                      className="autofill-light h-12 w-full rounded-md border border-zinc-200 bg-zinc-100 px-2 sm:px-4"
                     />
                   )}
                 />

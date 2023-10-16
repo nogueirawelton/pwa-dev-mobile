@@ -93,7 +93,7 @@ export function AdminLayout() {
       >
         <Sidebar closeMenu={closeMenu} />
       </MotionContent>
-      <main className="flex w-full flex-col space-y-4 divide-y divide-zinc-200 overflow-hidden bg-white px-6 py-4 text-zinc-900 lg:rounded-bl-lg lg:rounded-tl-lg">
+      <main className="flex w-full flex-col space-y-4 divide-y divide-zinc-200 overflow-hidden bg-white px-4 lg:px-6 py-4 text-zinc-900 lg:rounded-bl-lg lg:rounded-tl-lg">
         <header className="flex items-center justify-between">
           <div className="flex flex-col">
             <small className="text-sm font-semibold capitalize text-zinc-600">

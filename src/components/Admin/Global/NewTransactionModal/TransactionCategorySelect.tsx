@@ -12,7 +12,7 @@ export const TransactionCategorySelect = forwardRef<
     <Select.Root onValueChange={(value) => onChange(value)} {...field}>
       <Select.Trigger
         ref={ref}
-        className="group flex h-12 w-full items-center justify-between rounded-md border border-zinc-200 bg-zinc-100 p-2 data-[placeholder]:text-zinc-400 "
+        className="group flex h-12 w-full items-center justify-between rounded-md border border-zinc-200 bg-zinc-100 px-2 sm:px-4 data-[placeholder]:text-zinc-400 "
       >
         <Select.Value placeholder="Categoria" />
         <Select.Icon className="SelectIcon">
