@@ -3,10 +3,23 @@ import homeIllustration from "/img/home-illustration.svg";
 import { motion } from "framer-motion";
 import { User } from "phosphor-react";
 import { Logo } from "../components/Logo";
+import { useEffect } from "react";
+import { throwErrorMessage } from "../utils/throwErrorMessage";
+import { useStore } from "../stores/userData";
 
 export function HomeLayout() {
   const { pathname } = useLocation();
   const isHome = pathname == "/";
+
+  const userData = useStore((state) => state.userData);
+
+  useEffect(() => {
+    if (!isHome) {
+      if (!navigator.onLine && !userData) {
+        throwErrorMessage("Fique online para acessar sua conta!");
+      }
+    }
+  }, []);
 
   return (
     <>
