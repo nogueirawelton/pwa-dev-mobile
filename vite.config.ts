@@ -17,8 +17,8 @@ export default defineConfig({
         display: "standalone",
         scope: "/",
         start_url: "/",
-        name: "Kpz Finances",
-        short_name: "KFinances",
+        name: "KpzFinances",
+        short_name: "KpzFinances",
         description: "A Finance App",
         icons: [
           {
