@@ -21,7 +21,10 @@ export function Nav({ closeMenu }: NavProps) {
 
   function handleLogout() {
     signOut(auth);
-    setUserData(null);
+
+    if (navigator.onLine) {
+      setUserData(null);
+    }
   }
 
   return (

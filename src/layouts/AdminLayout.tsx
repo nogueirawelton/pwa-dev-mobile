@@ -64,6 +64,14 @@ export function AdminLayout() {
     });
   }, []);
 
+  useEffect(() => {
+    if (!navigator.onLine) {
+      navigator.serviceWorker.ready.then((swRegistration: any) => {
+        swRegistration.sync.register("sync-data");
+      });
+    }
+  }, []);
+
   if (!userData) {
     return (
       <div className="grid h-screen w-screen place-items-center">

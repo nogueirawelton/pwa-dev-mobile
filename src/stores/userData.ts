@@ -2,7 +2,9 @@ import { produce } from "immer";
 import { create } from "zustand";
 import { User } from "../@types/User";
 import { Transaction } from "../@types/Transaction";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { StateStorage, createJSONStorage, persist } from "zustand/middleware";
+import { openDB } from "idb";
+
 interface UserStore {
   userData: User | null;
   currentWalletID: string | null;
@@ -12,6 +14,30 @@ interface UserStore {
   insertNewTransaction: (walletID: string, transaction: Transaction) => void;
   deleteTransaction: (walletID: string, transactionID: string) => void;
 }
+
+export const hybridStorageAdapter = () => {
+  const dbPromise = openDB("kpz-finances-persist", 1, {
+    upgrade(db) {
+      db.createObjectStore("kpz-finances-persist");
+    },
+  });
+
+  return {
+    getItem: async (key: string) => {
+      const db = await dbPromise;
+      const data: Promise<string> = db.get(key, key);
+      return data;
+    },
+    setItem: async (key: string, value: string) => {
+      localStorage.setItem(key, JSON.stringify(value));
+      dbPromise.then((db) => db.put(key, value, key));
+    },
+    removeItem: async (key: string) => {
+      localStorage.removeItem(key);
+      dbPromise.then((db) => db.delete(key, key));
+    },
+  } as StateStorage;
+};
 
 export const useStore = create<UserStore>()(
   persist(
@@ -61,7 +87,7 @@ export const useStore = create<UserStore>()(
     },
     {
       name: "kpz-finances-persist", // Nome da chave no storage
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => hybridStorageAdapter()),
     },
   ),
 );

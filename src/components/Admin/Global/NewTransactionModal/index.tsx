@@ -79,10 +79,10 @@ export function NewTransactionModal({ children }: NewTransactionModalProps) {
 
     if (currentWalletID && userID) {
       try {
-        if(navigator.onLine) {  
+        if (navigator.onLine) {
           await createNewTransaction(newTransaction, userID, currentWalletID);
         }
-        
+
         insertNewTransaction(currentWalletID, newTransaction);
         setOpen(false);
       } catch (err) {

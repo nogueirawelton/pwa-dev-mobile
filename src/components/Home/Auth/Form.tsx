@@ -59,7 +59,6 @@ export function Form({ isLogin }: FormProps) {
         navigate("/admin");
       } catch (error: any) {
         throwLoginError(error.code);
-        console.log(error);
         setIsLoading(false);
       }
       return;
