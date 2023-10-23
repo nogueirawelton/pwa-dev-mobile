@@ -1,6 +1,9 @@
+import { precacheAndRoute } from "workbox-precaching";
 import { ref, set } from "firebase/database";
 import { openDB } from "idb";
 import { db } from "../src/firebase";
+
+precacheAndRoute(self.__WB_MANIFEST);
 
 self.addEventListener("sync", (event) => {
   switch (event.tag) {
