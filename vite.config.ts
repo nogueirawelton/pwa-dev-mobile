@@ -44,7 +44,7 @@ export default defineConfig({
       devOptions: {
         enabled: true,
       },
-      strategies: "injectManifest",
+      // strategies: "injectManifest",
       workbox: {
         skipWaiting: true,
         clientsClaim: true,
