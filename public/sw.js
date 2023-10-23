@@ -5,6 +5,9 @@ import { db } from "../src/firebase";
 
 precacheAndRoute(self.__WB_MANIFEST);
 
+self.addEventListener("install", () => self.skipWaiting());
+self.addEventListener("activate", () => self.clients.claim());
+
 self.addEventListener("sync", (event) => {
   switch (event.tag) {
     case "sync-data": {
