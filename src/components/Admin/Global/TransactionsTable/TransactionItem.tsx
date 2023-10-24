@@ -28,8 +28,9 @@ export function TransactionItem({
   async function removeTransaction() {
     if (currentWalletID && userID) {
       try {
-        await deleteTransactionById(userID, currentWalletID, uid);
-
+        if(navigator.onLine) {
+          await deleteTransactionById(userID, currentWalletID, uid);
+        }
         deleteTransaction(currentWalletID, uid);
       } catch (err) {
         throwErrorMessage("Erro ao deletar transação!");
