@@ -24,7 +24,8 @@ async function onSyncData() {
   const data = await idb.get("kpz-finances-persist", "kpz-finances-persist");
 
   console.log(data);
-  if (data && data.userData) {
+  if (data) {
+    console.log("Vai rodar");
     const { state } = JSON.parse(data);
     updateData(state);
   }
