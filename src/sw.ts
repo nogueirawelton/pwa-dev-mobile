@@ -28,6 +28,8 @@ async function onSyncData() {
     const { state } = JSON.parse(data);
     updateData(state);
   }
+
+  self.registration.showNotification("Título da Notificação");
 }
 
 function updateData(state: any) {
