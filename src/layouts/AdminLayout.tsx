@@ -40,8 +40,12 @@ export function AdminLayout() {
 
     async function handleLogin(signedUser: User) {
       const userRealtimeData = await getUserRealtimeData(signedUser.uid);
+      const token = await signedUser.getIdToken();
 
-      setUserData(userRealtimeData);
+      setUserData({
+        ...userRealtimeData,
+        token,
+      });
     }
 
     onAuthStateChanged(auth, async (signedUser) => {
@@ -65,11 +69,11 @@ export function AdminLayout() {
   }, []);
 
   useEffect(() => {
-    if (!navigator.onLine) {
-      navigator.serviceWorker.ready.then((swRegistration: any) => {
-        swRegistration.sync.register("sync-data");
-      });
-    }
+    // if (!navigator.onLine) {
+    navigator.serviceWorker.ready.then((swRegistration: any) => {
+      swRegistration.sync.register("sync-data");
+    });
+    // }
   }, []);
 
   if (!userData) {
