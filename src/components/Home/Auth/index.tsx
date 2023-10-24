@@ -54,9 +54,9 @@ export function Auth() {
       }
     }
 
-    // if (!window.matchMedia("(display-mode: standalone)").matches) {
-    //   return;
-    // }
+    if (!window.matchMedia("(display-mode: standalone)").matches) {
+      return;
+    }
 
     mount();
   }, []);
