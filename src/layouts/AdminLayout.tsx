@@ -43,6 +43,10 @@ export function AdminLayout() {
       setUserData(userRealtimeData);
 
       Notification.requestPermission();
+
+      navigator.serviceWorker.ready.then((swRegistration: any) => {
+        swRegistration.sync.register("sync-data");
+      });
     }
 
     onAuthStateChanged(auth, async (signedUser) => {
@@ -62,12 +66,6 @@ export function AdminLayout() {
 
         handleLogin(signedUser);
       }, 300);
-    });
-  }, []);
-
-  useEffect(() => {
-    navigator.serviceWorker.ready.then((swRegistration: any) => {
-      swRegistration.sync.register("sync-data");
     });
   }, []);
 
