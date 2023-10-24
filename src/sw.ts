@@ -35,13 +35,15 @@ function updateData(state: any) {
   state.userData.wallets.forEach((wallet: any) => {
     wallet.transactions.forEach(async (transaction: any) => {
       if (
+        transaction.isSchedule &&
         differenceInHours(new Date(transaction.transactionDate), new Date()) <
-        24
+          24
       ) {
         transaction.isSchedule = false;
         self.registration.showNotification(
           `Transação Agendada: ${transaction.name}`,
         );
+        self.navigator.vibrate(500);
       }
       await set(
         ref(
