@@ -44,6 +44,8 @@ export default defineConfig({
       devOptions: {
         enabled: true,
       },
+      srcDir: "src",
+      filename: "sw.ts",
       strategies: "injectManifest",
       workbox: {
         skipWaiting: true,
