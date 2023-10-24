@@ -22,13 +22,14 @@ export function Auth() {
     async function mount() {
       const persistedUserData = localStorage.getItem("kpz-finances-persist");
 
+      console.log(persistedUserData);
       if (!persistedUserData) {
         return;
       }
 
       const userData = JSON.parse(persistedUserData);
       console.log(userData);
-      
+
       if (userData) {
         const credentialData = await getExistentCredential(userData.uid);
 
