@@ -40,10 +40,18 @@ function updateData(state: any) {
           24
       ) {
         transaction.isSchedule = false;
-        self.registration.showNotification(
-          `Transação Agendada: ${transaction.name}`,
-        );
-        self.navigator.vibrate(500);
+
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            self.registration.showNotification(
+              `Transação Agendada: ${transaction.name}`,
+            );
+
+            if ("vibrate" in navigator) {
+              navigator.vibrate(500);
+            }
+          }
+        });
       }
       await set(
         ref(
