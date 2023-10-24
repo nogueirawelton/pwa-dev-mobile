@@ -40,12 +40,9 @@ export function AdminLayout() {
 
     async function handleLogin(signedUser: User) {
       const userRealtimeData = await getUserRealtimeData(signedUser.uid);
-      const token = await signedUser.getIdToken();
+      setUserData(userRealtimeData);
 
-      setUserData({
-        ...userRealtimeData,
-        token,
-      });
+      Notification.requestPermission();
     }
 
     onAuthStateChanged(auth, async (signedUser) => {

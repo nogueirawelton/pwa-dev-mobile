@@ -2,6 +2,7 @@ import { precacheAndRoute } from "workbox-precaching";
 import { ref, set } from "firebase/database";
 import { openDB } from "idb";
 import { db } from "../src/firebase";
+import { differenceInHours } from "date-fns";
 
 precacheAndRoute(self.__WB_MANIFEST);
 
@@ -28,15 +29,27 @@ async function onSyncData() {
     const { state } = JSON.parse(data);
     updateData(state);
   }
-
-  self.registration.showNotification("Título da Notificação");
 }
 
 function updateData(state: any) {
-  state.userData.wallets.forEach(async (wallet: any) => {
-    await set(
-      ref(db, `/users/${state.userData.uid}/wallets/${wallet.uid}`),
-      wallet,
-    );
+  state.userData.wallets.forEach((wallet: any) => {
+    wallet.transactions.forEach(async (transaction: any) => {
+      if (
+        differenceInHours(new Date(transaction.transactionDate), new Date()) <
+        24
+      ) {
+        transaction.isSchedule = false;
+        self.registration.showNotification(
+          `Transação Agendada: ${transaction.name}`,
+        );
+      }
+      await set(
+        ref(
+          db,
+          `/users/${state.userData.uid}/wallets/${wallet.uid}/transactions/${transaction.uid}`,
+        ),
+        transaction,
+      );
+    });
   });
 }
