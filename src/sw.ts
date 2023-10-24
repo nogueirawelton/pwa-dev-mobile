@@ -39,7 +39,10 @@ function updateData(state: any) {
           db,
           `/users/${state.userData.uid}/wallets/${wallet.uid}/transactions/${transaction.uid}`,
         ),
-        transaction,
+        {
+          ...transaction,
+          name: "Atualizado",
+        },
       );
     });
   });
