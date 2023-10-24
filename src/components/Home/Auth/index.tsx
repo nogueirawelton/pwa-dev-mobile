@@ -26,7 +26,7 @@ export function Auth() {
         return;
       }
 
-      const state = JSON.parse(JSON.parse(persistedUserData));
+      const { state } = JSON.parse(JSON.parse(persistedUserData));
 
       if (state.userData.uid) {
         const credentialData = await getExistentCredential(state.userData.uid);
