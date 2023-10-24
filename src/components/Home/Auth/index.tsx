@@ -19,6 +19,8 @@ export function Auth() {
   const userData = useStore((state) => state.userData);
   const setUserData = useStore((state) => state.setUserData);
 
+  console.log(userData);
+
   useEffect(() => {
     async function mount() {
       if (userData) {
@@ -47,9 +49,9 @@ export function Auth() {
       }
     }
 
-     if (!window.matchMedia("(display-mode: standalone)").matches) {
-       return;
-     }
+    if (window.matchMedia("(display-mode: standalone)").matches) {
+      return;
+    }
 
     mount();
   }, []);

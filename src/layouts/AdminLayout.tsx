@@ -40,6 +40,7 @@ export function AdminLayout() {
 
     async function handleLogin(signedUser: User) {
       const userRealtimeData = await getUserRealtimeData(signedUser.uid);
+      console.log(userRealtimeData);
       setUserData(userRealtimeData);
 
       Notification.requestPermission().then(() => {
