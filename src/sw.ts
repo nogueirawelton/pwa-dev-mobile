@@ -41,15 +41,13 @@ function updateData(state: any) {
       ) {
         transaction.isSchedule = false;
 
-        Notification.requestPermission().then((permission) => {
-          if (permission === "granted") {
-          }
-        });
-
         self.registration.showNotification(`Transação Agendada`, {
           body: `Sua Transação ${transaction.name} está agendada para hoje!`,
         });
-        self.navigator.vibrate(500);
+
+        if ("vibrate" in navigator) {
+          navigator.vibrate(500);
+        }
       }
       await set(
         ref(
