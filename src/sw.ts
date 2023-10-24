@@ -25,26 +25,16 @@ async function onSyncData() {
 
   console.log(data);
   if (data) {
-    console.log("Vai rodar");
     const { state } = JSON.parse(data);
     updateData(state);
   }
 }
 
 function updateData(state: any) {
-  state.userData.wallets.forEach((wallet: any) => {
-    wallet.transactions.forEach(async (transaction: any) => {
-      await set(
-        ref(
-          db,
-          `/users/${state.userData.uid}/wallets/${wallet.uid}/transactions/${transaction.uid}`,
-        ),
-        {
-          ...transaction,
-          name: "Atualizado",
-        },
-      );
-    });
+  state.userData.wallets.forEach(async (wallet: any) => {
+    await set(
+      ref(db, `/users/${state.userData.uid}/wallets/${wallet.uid}`),
+      wallet,
+    );
   });
-  console.log("Atualizado");
 }
