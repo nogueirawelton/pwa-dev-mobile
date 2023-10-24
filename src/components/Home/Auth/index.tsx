@@ -27,7 +27,8 @@ export function Auth() {
       }
 
       const userData = JSON.parse(persistedUserData);
-
+      console.log(userData);
+      
       if (userData) {
         const credentialData = await getExistentCredential(userData.uid);
 
