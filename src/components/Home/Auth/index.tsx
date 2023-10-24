@@ -27,7 +27,7 @@ export function Auth() {
         return;
       }
 
-      const userData = JSON.parse(persistedUserData);
+      const userData = JSON.parse(JSON.parse(persistedUserData));
       console.log(userData);
 
       if (userData) {
