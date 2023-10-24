@@ -76,6 +76,7 @@ export function AdminLayout() {
     }
   }, []);
 
+  
   if (!userData) {
     return (
       <div className="grid h-screen w-screen place-items-center">
