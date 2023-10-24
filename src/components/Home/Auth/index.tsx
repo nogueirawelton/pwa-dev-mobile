@@ -16,19 +16,18 @@ export function Auth() {
 
   const navigate = useNavigate();
 
-  const persistedUserData = localStorage.getItem("kpz-finances-persist");
   const setUserData = useStore((state) => state.setUserData);
-
-  if (!persistedUserData) {
-    return;
-  }
-
-  const userData = JSON.parse(persistedUserData);
-
-  console.log(userData);
 
   useEffect(() => {
     async function mount() {
+      const persistedUserData = localStorage.getItem("kpz-finances-persist");
+
+      if (!persistedUserData) {
+        return;
+      }
+
+      const userData = JSON.parse(persistedUserData);
+
       if (userData) {
         const credentialData = await getExistentCredential(userData.uid);
 
