@@ -16,8 +16,14 @@ export function Auth() {
 
   const navigate = useNavigate();
 
-  const userData = useStore((state) => state.userData);
+  const persistedUserData = localStorage.getItem("kpz-finances-persist");
   const setUserData = useStore((state) => state.setUserData);
+
+  if (!persistedUserData) {
+    return;
+  }
+
+  const userData = JSON.parse(persistedUserData);
 
   console.log(userData);
 
@@ -49,9 +55,9 @@ export function Auth() {
       }
     }
 
-    // if (!window.matchMedia("(display-mode: standalone)").matches) {
-    //   return;
-    // }
+    if (!window.matchMedia("(display-mode: standalone)").matches) {
+      return;
+    }
 
     mount();
   }, []);
