@@ -43,15 +43,13 @@ function updateData(state: any) {
 
         Notification.requestPermission().then((permission) => {
           if (permission === "granted") {
-            self.registration.showNotification(
-              `Transação Agendada: ${transaction.name}`,
-            );
-
-            if ("vibrate" in navigator) {
-              navigator.vibrate(500);
-            }
           }
         });
+
+        self.registration.showNotification(`Transação Agendada`, {
+          body: `Sua Transação ${transaction.name} está agendada para hoje!`,
+        });
+        self.navigator.vibrate(500);
       }
       await set(
         ref(

@@ -42,8 +42,10 @@ export function AdminLayout() {
       const userRealtimeData = await getUserRealtimeData(signedUser.uid);
       setUserData(userRealtimeData);
 
-      navigator.serviceWorker.ready.then((swRegistration: any) => {
-        swRegistration.sync.register("sync-data");
+      Notification.requestPermission().then(() => {
+        navigator.serviceWorker.ready.then((swRegistration: any) => {
+          swRegistration.sync.register("sync-data");
+        });
       });
     }
 
